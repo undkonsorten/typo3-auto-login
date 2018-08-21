@@ -1,0 +1,22 @@
+{
+    "name": "undkonsorten/typo3-auto-login",
+    "description": "Automatically authenticates a TYPO3 CMS back end user for development",
+    "type": "library",
+    "require": {
+		"php": "^5.5 || ^7.0",
+        "typo3/cms-core": "^8.7",
+        "typo3/cms-sv": "^8.7"
+    },
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Felix Althaus",
+            "email": "felix.althaus@undkonsorten.com"
+        }
+    ],
+	"autoload": {
+		"psr-4": {
+			"Undkonsorten\\TYPO3AutoLogin\\": "src/"
+		}
+	}
+}
