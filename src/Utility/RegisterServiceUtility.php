@@ -11,7 +11,6 @@ namespace Undkonsorten\TYPO3AutoLogin\Utility;
 use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use Undkonsorten\TYPO3AutoLogin\Exception\NotAllowedException;
 use Undkonsorten\TYPO3AutoLogin\Service\AutomaticAuthenticationService;
 
@@ -27,8 +26,14 @@ use Undkonsorten\TYPO3AutoLogin\Service\AutomaticAuthenticationService;
 class RegisterServiceUtility
 {
 
+    /**
+     * Name of the cookie that disables autologin
+     */
     const DISABLE_AUTO_LOGIN_COOKIE_NAME = '_typo3-auto-login';
 
+    /**
+     * Value of the cookie that disables autologin
+     */
     const DISABLE_AUTO_LOGIN_COOKIE_VALUE = 'disable';
 
     static protected function getLogger()
@@ -48,7 +53,7 @@ class RegisterServiceUtility
             static::getLogger()->notice(sprintf('%s is enabled but no username given. Please set environment variable "%s".',
                 AutomaticAuthenticationService::class,
                 AutomaticAuthenticationService::TYPO3_AUTOLOGIN_USERNAME_ENVVAR));
-        } elseif ((TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_CLI) === 0 && !static::isDisableCookieSet()) {
+        } elseif (!static::isRequestTypeCli() && !static::isDisableCookieSet()) {
             ExtensionManagementUtility::addService(
                 'sv',
                 'auth',
@@ -68,9 +73,38 @@ class RegisterServiceUtility
         }
     }
 
+    /**
+     * Checks whether the cookie to disable autologin is set
+     *
+     * @return bool
+     */
     static protected function isDisableCookieSet()
     {
         return isset($GLOBALS['_COOKIE'][static::DISABLE_AUTO_LOGIN_COOKIE_NAME]) && $GLOBALS['_COOKIE'][static::DISABLE_AUTO_LOGIN_COOKIE_NAME] === static::DISABLE_AUTO_LOGIN_COOKIE_VALUE;
+    }
+
+    /**
+     * Determine whether this is a CLI request
+     *
+     * @return bool
+     */
+    static protected function isRequestTypeCli()
+    {
+        // remove after dropping support for TYPO3 < 8
+        if (!static::isVersion8Up()) {
+            return defined('TYPO3_cliMode') && TYPO3_cliMode;
+        }
+        return (TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_CLI) !== 0;
+    }
+
+    /**
+     * Checks whether TYPO3 is version 8 or newer
+     *
+     * @return bool
+     */
+    static protected function isVersion8Up()
+    {
+        return \TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) >= 8000000;
     }
 
 }
