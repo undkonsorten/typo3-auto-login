@@ -3,7 +3,9 @@
 ## What does it do?
 
 This package automatically starts a backend user session for the open source CMS 
-[TYPO3 CMS](https://typo3.org), configured by an environment variable.
+[TYPO3 CMS](https://typo3.org), configured by an environment variable. You can set
+a cookie to temporarily disable the automatic login (e.g. for _switch user_). There‘s
+a [bookmarklet](#bookmarklet) that does the job for you.
 
 It is based on the Daniel Siepmann‘s 
 [great work](https://daniel-siepmann.de/Posts/2018/2018-07-25-auto-login-typo3-backend.html).
@@ -48,6 +50,18 @@ if (\TYPO3\CMS\Core\Utility\GeneralUtility::getApplicationContext()->isDevelopme
 ```
 
 Autologin will fail and throw an exception in `Production(/*)` contexts.
+
+### Bookmarklet
+
+There are reasons to temporarily disable the automatic login, e.g. to check user rights
+on a local machine. Autologin will prevent the TYPO3 switch user functionality.
+To circumvent this there‘s a bookmarklet the (un)sets the cookie `_typo3-auto-login`
+for you to prevent autologin.
+Just add a new bookmark with the following "URL"
+```
+javascript:(q=>{let n=window.Notification,s='_typo3-auto-login',d='disable',p='TYPO3 auto login',w=document,a=w.cookie.split(';').some(x=>x.trim()===`${s}=${d}`);w.cookie=`${s}=${a?';expires='+new Date(0).toUTCString():d};path=/;`;n&&n.permission!=='denied'&&n.requestPermission().then(q=>new n(p,{body:`(${a?'✓':'✗'}) ${p} is now ${a?'enabled':'disabled'}. Cookie »${s}« has been ${a?'removed':'set'}.`,icon:'https://extensions.typo3.org/fileadmin/user_upload/ext_icon.png'}));})();
+```
+and name the files according to your likings.
 
 # Q&A
 

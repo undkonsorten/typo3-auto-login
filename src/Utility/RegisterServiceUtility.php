@@ -11,6 +11,7 @@ namespace Undkonsorten\TYPO3AutoLogin\Utility;
 use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use Undkonsorten\TYPO3AutoLogin\Exception\NotAllowedException;
 use Undkonsorten\TYPO3AutoLogin\Service\AutomaticAuthenticationService;
 
@@ -25,6 +26,10 @@ use Undkonsorten\TYPO3AutoLogin\Service\AutomaticAuthenticationService;
  */
 class RegisterServiceUtility
 {
+
+    const DISABLE_AUTO_LOGIN_COOKIE_NAME = '_typo3-auto-login';
+
+    const DISABLE_AUTO_LOGIN_COOKIE_VALUE = 'disable';
 
     static protected function getLogger()
     {
@@ -43,7 +48,7 @@ class RegisterServiceUtility
             static::getLogger()->notice(sprintf('%s is enabled but no username given. Please set environment variable "%s".',
                 AutomaticAuthenticationService::class,
                 AutomaticAuthenticationService::TYPO3_AUTOLOGIN_USERNAME_ENVVAR));
-        } elseif ((TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_CLI) === 0) {
+        } elseif ((TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_CLI) === 0 && !static::isDisableCookieSet()) {
             ExtensionManagementUtility::addService(
                 'sv',
                 'auth',
@@ -61,6 +66,11 @@ class RegisterServiceUtility
             $GLOBALS['TYPO3_CONF_VARS']['SVCONF']['auth']['setup']['BE_alwaysFetchUser'] = true;
             $GLOBALS['TYPO3_CONF_VARS']['SVCONF']['auth']['setup']['BE_alwaysAuthUser'] = true;
         }
+    }
+
+    static protected function isDisableCookieSet()
+    {
+        return isset($GLOBALS['_COOKIE'][static::DISABLE_AUTO_LOGIN_COOKIE_NAME]) && $GLOBALS['_COOKIE'][static::DISABLE_AUTO_LOGIN_COOKIE_NAME] === static::DISABLE_AUTO_LOGIN_COOKIE_VALUE;
     }
 
 }
