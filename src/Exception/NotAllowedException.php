@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Undkonsorten\TYPO3AutoLogin\Exception;
 
 /**
@@ -13,9 +14,7 @@ namespace Undkonsorten\TYPO3AutoLogin\Exception;
  *
  * Class NotAllowedException
  * @author Felix Althaus <felix.althaus@undkonsorten.com>
- * @package Undkonsorten\TYPO3AutoLogin\Exception
  */
 class NotAllowedException extends \Exception
 {
-
 }

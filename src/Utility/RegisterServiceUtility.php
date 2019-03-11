@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Undkonsorten\TYPO3AutoLogin\Utility;
 
 /**
@@ -7,7 +9,7 @@ namespace Undkonsorten\TYPO3AutoLogin\Utility;
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
  */
-
+use TYPO3\CMS\Core\Log\Logger;
 use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -21,7 +23,6 @@ use Undkonsorten\TYPO3AutoLogin\Service\AutomaticAuthenticationService;
  * @author Daniel Siepmann <coding@daniel-siepmann.de>
  * @author Tim Schreiner
  * @author Felix Althaus <felix.althaus@undkonsorten.com>
- * @package Undkonsorten\TYPO3AutoLogin\Utility
  */
 class RegisterServiceUtility
 {
@@ -29,14 +30,14 @@ class RegisterServiceUtility
     /**
      * Name of the cookie that disables autologin
      */
-    const DISABLE_AUTO_LOGIN_COOKIE_NAME = '_typo3-auto-login';
+    protected const DISABLE_AUTO_LOGIN_COOKIE_NAME = '_typo3-auto-login';
 
     /**
      * Value of the cookie that disables autologin
      */
-    const DISABLE_AUTO_LOGIN_COOKIE_VALUE = 'disable';
+    protected const DISABLE_AUTO_LOGIN_COOKIE_VALUE = 'disable';
 
-    static protected function getLogger()
+    protected static function getLogger(): Logger
     {
         return GeneralUtility::makeInstance(LogManager::class)->getLogger(__CLASS__);
     }
@@ -44,15 +45,17 @@ class RegisterServiceUtility
     /**
      * @throws NotAllowedException
      */
-    static public function registerAutomaticAuthenticationService()
+    public static function registerAutomaticAuthenticationService(): void
     {
         if (GeneralUtility::getApplicationContext()->isProduction()) {
             throw new NotAllowedException(sprintf('Automatic login is not allowed in Production context. Current context: "%s"', GeneralUtility::getApplicationContext()), 1534842728);
         }
         if (false === getenv(AutomaticAuthenticationService::TYPO3_AUTOLOGIN_USERNAME_ENVVAR)) {
-            static::getLogger()->notice(sprintf('%s is enabled but no username given. Please set environment variable "%s".',
+            static::getLogger()->notice(sprintf(
+                '%s is enabled but no username given. Please set environment variable "%s".',
                 AutomaticAuthenticationService::class,
-                AutomaticAuthenticationService::TYPO3_AUTOLOGIN_USERNAME_ENVVAR));
+                AutomaticAuthenticationService::TYPO3_AUTOLOGIN_USERNAME_ENVVAR
+            ));
         } elseif (!static::isRequestTypeCli() && !static::isDisableCookieSet()) {
             ExtensionManagementUtility::addService(
                 'sv',
@@ -68,7 +71,9 @@ class RegisterServiceUtility
                     'className' => AutomaticAuthenticationService::class,
                 ]
             );
+            /** @noinspection UnsupportedStringOffsetOperationsInspection */
             $GLOBALS['TYPO3_CONF_VARS']['SVCONF']['auth']['setup']['BE_alwaysFetchUser'] = true;
+            /** @noinspection UnsupportedStringOffsetOperationsInspection */
             $GLOBALS['TYPO3_CONF_VARS']['SVCONF']['auth']['setup']['BE_alwaysAuthUser'] = true;
         }
     }
@@ -78,7 +83,7 @@ class RegisterServiceUtility
      *
      * @return bool
      */
-    static protected function isDisableCookieSet()
+    protected static function isDisableCookieSet(): bool
     {
         return isset($GLOBALS['_COOKIE'][static::DISABLE_AUTO_LOGIN_COOKIE_NAME]) && $GLOBALS['_COOKIE'][static::DISABLE_AUTO_LOGIN_COOKIE_NAME] === static::DISABLE_AUTO_LOGIN_COOKIE_VALUE;
     }
@@ -88,23 +93,8 @@ class RegisterServiceUtility
      *
      * @return bool
      */
-    static protected function isRequestTypeCli()
+    protected static function isRequestTypeCli(): bool
     {
-        // remove after dropping support for TYPO3 < 8
-        if (!static::isVersion8Up()) {
-            return defined('TYPO3_cliMode') && TYPO3_cliMode;
-        }
         return (TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_CLI) !== 0;
     }
-
-    /**
-     * Checks whether TYPO3 is version 8 or newer
-     *
-     * @return bool
-     */
-    static protected function isVersion8Up()
-    {
-        return \TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) >= 8000000;
-    }
-
 }
