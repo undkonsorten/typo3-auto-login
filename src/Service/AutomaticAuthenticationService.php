@@ -32,9 +32,12 @@ class AutomaticAuthenticationService extends AbstractAuthenticationService
         $sessionId = $this->pObj->getSessionId();
         $loginType = $this->pObj->getLoginType();
         $sessionBackend = GeneralUtility::makeInstance(SessionManager::class)->getSessionBackend($loginType);
-        $session = $sessionBackend->get($sessionId);
-        if ($session['ses_backuserid'] ?? null) {
-            return null;
+        try {
+            $session = $sessionBackend->get($sessionId);
+            if ($session['ses_backuserid'] ?? null) {
+                return null;
+            }
+        } catch (\TYPO3\CMS\Core\Session\Backend\Exception\SessionNotFoundException $e) {
         }
         return $this->fetchUserRecord(getenv(self::TYPO3_AUTOLOGIN_USERNAME_ENVVAR));
     }
