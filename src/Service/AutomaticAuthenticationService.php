@@ -29,6 +29,13 @@ class AutomaticAuthenticationService extends AbstractAuthenticationService
 
     public function getUser()
     {
+        $sessionId = $this->pObj->getSessionId();
+        $loginType = $this->pObj->getLoginType();
+        $sessionBackend = GeneralUtility::makeInstance(SessionManager::class)->getSessionBackend($loginType);
+        $session = $sessionBackend->get($sessionId);
+        if ($session['ses_backuserid'] ?? null) {
+            return null;
+        }
         return $this->fetchUserRecord(getenv(self::TYPO3_AUTOLOGIN_USERNAME_ENVVAR));
     }
 
