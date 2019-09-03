@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 namespace Undkonsorten\TYPO3AutoLogin\Utility;
 
@@ -30,14 +29,14 @@ class RegisterServiceUtility
     /**
      * Name of the cookie that disables autologin
      */
-    protected const DISABLE_AUTO_LOGIN_COOKIE_NAME = '_typo3-auto-login';
+    const DISABLE_AUTO_LOGIN_COOKIE_NAME = '_typo3-auto-login';
 
     /**
      * Value of the cookie that disables autologin
      */
-    protected const DISABLE_AUTO_LOGIN_COOKIE_VALUE = 'disable';
+    const DISABLE_AUTO_LOGIN_COOKIE_VALUE = 'disable';
 
-    protected static function getLogger(): Logger
+    protected static function getLogger()
     {
         return GeneralUtility::makeInstance(LogManager::class)->getLogger(__CLASS__);
     }
@@ -45,7 +44,7 @@ class RegisterServiceUtility
     /**
      * @throws NotAllowedException
      */
-    public static function registerAutomaticAuthenticationService(): void
+    public static function registerAutomaticAuthenticationService()
     {
         if (GeneralUtility::getApplicationContext()->isProduction()) {
             throw new NotAllowedException(sprintf('Automatic login is not allowed in Production context. Current context: "%s"', GeneralUtility::getApplicationContext()), 1534842728);
@@ -83,7 +82,7 @@ class RegisterServiceUtility
      *
      * @return bool
      */
-    protected static function isDisableCookieSet(): bool
+    protected static function isDisableCookieSet()
     {
         return isset($GLOBALS['_COOKIE'][static::DISABLE_AUTO_LOGIN_COOKIE_NAME]) && $GLOBALS['_COOKIE'][static::DISABLE_AUTO_LOGIN_COOKIE_NAME] === static::DISABLE_AUTO_LOGIN_COOKIE_VALUE;
     }
@@ -93,7 +92,7 @@ class RegisterServiceUtility
      *
      * @return bool
      */
-    protected static function isRequestTypeCli(): bool
+    protected static function isRequestTypeCli()
     {
         return (TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_CLI) !== 0;
     }

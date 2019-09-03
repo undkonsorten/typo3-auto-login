@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 namespace Undkonsorten\TYPO3AutoLogin\Service;
 
@@ -25,7 +24,7 @@ class AutomaticAuthenticationService extends AbstractAuthenticationService
     /**
      * Name of the environment variable that defines the BE user name
      */
-    public const TYPO3_AUTOLOGIN_USERNAME_ENVVAR = 'TYPO3_AUTOLOGIN_USERNAME';
+    const TYPO3_AUTOLOGIN_USERNAME_ENVVAR = 'TYPO3_AUTOLOGIN_USERNAME';
 
     public function getUser()
     {
@@ -35,7 +34,7 @@ class AutomaticAuthenticationService extends AbstractAuthenticationService
     public function authUser(
         /** @noinspection PhpUnusedParameterInspection */
         array $user
-    ): int {
+    ) {
         return 200;
     }
 }
