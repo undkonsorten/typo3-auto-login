@@ -94,6 +94,6 @@ class RegisterServiceUtility
      */
     protected static function isRequestTypeCli()
     {
-        return (TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_CLI) !== 0;
+        return PHP_SAPI === 'cli';
     }
 }
