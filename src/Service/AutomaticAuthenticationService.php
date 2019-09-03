@@ -2,7 +2,8 @@
 
 namespace Undkonsorten\TYPO3AutoLogin\Service;
 
-use TYPO3\CMS\Core\Authentication\AbstractAuthenticationService;
+
+use TYPO3\CMS\Sv\AbstractAuthenticationService;
 
 /**
  * This file is part of the composer package "undkonsorten/typo3-auto-login" for use with TYPO3 CMS.
