@@ -1,5 +1,8 @@
 # TYPO3 Automatic BE Authentication
 
+[![Pipeline](https://img.shields.io/travis/com/eliashaeussler/typo3-auto-login)](https://travis-ci.com/github/eliashaeussler/typo3-auto-login)
+[![Coverage](https://img.shields.io/coveralls/github/eliashaeussler/typo3-auto-login)](https://coveralls.io/github/eliashaeussler/typo3-auto-login)
+
 ## What does it do?
 
 This package automatically starts a backend user session for the open source CMS 

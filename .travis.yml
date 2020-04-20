@@ -38,3 +38,6 @@ script:
   - export typo3DatabaseUsername="root"
   - export typo3DatabasePassword=""
   - composer test -- --coverage-text
+
+after_success:
+  - travis_retry composer test:coverage
