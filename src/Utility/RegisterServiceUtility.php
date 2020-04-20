@@ -9,6 +9,8 @@ namespace Undkonsorten\TYPO3AutoLogin\Utility;
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
  */
+
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Log\Logger;
 use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -47,8 +49,8 @@ class RegisterServiceUtility
      */
     public static function registerAutomaticAuthenticationService(): void
     {
-        if (GeneralUtility::getApplicationContext()->isProduction()) {
-            throw new NotAllowedException(sprintf('Automatic login is not allowed in Production context. Current context: "%s"', GeneralUtility::getApplicationContext()), 1534842728);
+        if (Environment::getContext()->isProduction()) {
+            throw new NotAllowedException(sprintf('Automatic login is not allowed in Production context. Current context: "%s"', Environment::getContext()), 1534842728);
         }
         if (false === getenv(AutomaticAuthenticationService::TYPO3_AUTOLOGIN_USERNAME_ENVVAR)) {
             static::getLogger()->notice(sprintf(
