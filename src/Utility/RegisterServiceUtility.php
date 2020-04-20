@@ -70,6 +70,8 @@ class RegisterServiceUtility
                     'available' => true,
                     'priority' => 100,
                     'quality' => 50,
+                    'os' => '',
+                    'exec' => '',
                     'className' => AutomaticAuthenticationService::class,
                 ]
             );
