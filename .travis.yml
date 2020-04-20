@@ -1,0 +1,40 @@
+language: php
+
+matrix:
+  include:
+    - php: 7.2
+      env: TYPO3_VERSION=^9.5
+    - php: 7.3
+      env: TYPO3_VERSION=^9.5
+    - php: 7.2
+      env: TYPO3_VERSION=^10.4
+    - php: 7.3
+      env: TYPO3_VERSION=^10.4
+
+services:
+  - mysql
+
+sudo: false
+env: COMPOSER_NO_INTERACTION=1
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+before_install:
+  - composer self-update
+  - composer --version
+  - composer global require hirak/prestissimo
+
+before_script:
+  - composer config minimum-stability "${MINIMUM_STABILITY-stable}"
+  - composer config prefer-stable true
+  - composer require typo3/cms-core:${TYPO3_VERSION} --update-with-dependencies
+  - git checkout composer.json
+
+script:
+  - export typo3DatabaseName="typo3"
+  - export typo3DatabaseHost="127.0.0.1"
+  - export typo3DatabaseUsername="root"
+  - export typo3DatabasePassword=""
+  - composer test -- --coverage-text
