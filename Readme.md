@@ -15,7 +15,7 @@ If you feel like saying "Thank you" or donating please consider him first!
 
 **Be considerate when using this tool. Always have security in mind.**
 
-**Any usage beyond development on a local machine is strongly dicouraged.**
+**Any usage beyond development on a local machine is strongly discouraged.**
 
 Make sure to only require this package with `--dev` option and check your
 deployment for measures to make sure the code is never deployed to a production
@@ -38,7 +38,7 @@ if you take care about class (auto) loading by yourself.
 To configure username for automatic login set the environment variable 
 `$TYPO3_AUTOLOGIN_USERNAME` somewhere in your environment.
 
-Add an intialization call in your `AdditionalConfiguration.php` or in
+Add an initialization call in your `AdditionalConfiguration.php` or in
 a file required from there. Make sure to only initialize the service for
 `Development` context by either wrapping it with a condition or putting
 it to a file only loaded in `Development` context.
