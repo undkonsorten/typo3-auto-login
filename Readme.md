@@ -1,7 +1,7 @@
 # TYPO3 Automatic BE Authentication
 
-[![Pipeline](https://img.shields.io/travis/com/eliashaeussler/typo3-auto-login)](https://travis-ci.com/github/eliashaeussler/typo3-auto-login)
-[![Coverage](https://img.shields.io/coveralls/github/eliashaeussler/typo3-auto-login)](https://coveralls.io/github/eliashaeussler/typo3-auto-login)
+[![Pipeline](https://img.shields.io/travis/com/undkonsorten/typo3-auto-login)](https://travis-ci.com/github/undkonsorten/typo3-auto-login)
+[![Coverage](https://img.shields.io/coveralls/github/undkonsorten/typo3-auto-login)](https://coveralls.io/github/undkonsorten/typo3-auto-login)
 
 ## What does it do?
 
@@ -47,8 +47,8 @@ a file required from there. Make sure to only initialize the service for
 it to a file only loaded in `Development` context.
 
 ```php
-if (\TYPO3\CMS\Core\Core\Environment::getContext()->isDevelopment()) {
-    \Undkonsorten\TYPO3AutoLogin\Utility\RegisterServiceUtility::registerAutomaticAuthenticationService();   
+use TYPO3\CMS\Core\Core\Environment;use Undkonsorten\TYPO3AutoLogin\Utility\RegisterServiceUtility;if (Environment::getContext()->isDevelopment()) {
+    RegisterServiceUtility::registerAutomaticAuthenticationService();   
 }
 ```
 
