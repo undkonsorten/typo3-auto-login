@@ -58,7 +58,7 @@ class RegisterServiceUtility
                 AutomaticAuthenticationService::class,
                 AutomaticAuthenticationService::TYPO3_AUTOLOGIN_USERNAME_ENVVAR
             ));
-        } elseif (!static::isRequestTypeCli() && !static::isDisableCookieSet()) {
+        } elseif (!Environment::isCli() && !static::isDisableCookieSet()) {
             ExtensionManagementUtility::addService(
                 'sv',
                 'auth',
@@ -88,15 +88,5 @@ class RegisterServiceUtility
     protected static function isDisableCookieSet(): bool
     {
         return isset($GLOBALS['_COOKIE'][static::DISABLE_AUTO_LOGIN_COOKIE_NAME]) && $GLOBALS['_COOKIE'][static::DISABLE_AUTO_LOGIN_COOKIE_NAME] === static::DISABLE_AUTO_LOGIN_COOKIE_VALUE;
-    }
-
-    /**
-     * Determine whether this is a CLI request
-     *
-     * @return bool
-     */
-    protected static function isRequestTypeCli(): bool
-    {
-        return (TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_CLI) !== 0;
     }
 }
