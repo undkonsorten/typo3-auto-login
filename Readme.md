@@ -47,8 +47,8 @@ a file required from there. Make sure to only initialize the service for
 it to a file only loaded in `Development` context.
 
 ```php
-use TYPO3\CMS\Core\Core\Environment;use Undkonsorten\TYPO3AutoLogin\Utility\RegisterServiceUtility;if (Environment::getContext()->isDevelopment()) {
-    RegisterServiceUtility::registerAutomaticAuthenticationService();   
+if (\TYPO3\CMS\Core\Core\Environment::getContext()->isDevelopment()) {
+    \Undkonsorten\TYPO3AutoLogin\Utility\RegisterServiceUtility::registerAutomaticAuthenticationService();   
 }
 ```
 
