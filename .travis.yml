@@ -7,9 +7,9 @@ matrix:
     - php: 7.3
       env: TYPO3_VERSION=^9.5
     - php: 7.2
-      env: TYPO3_VERSION=^10.4
+      env: TYPO3_VERSION=^10.4@dev MINIMUM_STABILITY=dev
     - php: 7.3
-      env: TYPO3_VERSION=^10.4
+      env: TYPO3_VERSION=^10.4@dev MINIMUM_STABILITY=dev
 
 services:
   - mysql
