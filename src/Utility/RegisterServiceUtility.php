@@ -9,6 +9,8 @@ namespace Undkonsorten\TYPO3AutoLogin\Utility;
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
  */
+
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Log\Logger;
 use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -47,8 +49,8 @@ class RegisterServiceUtility
      */
     public static function registerAutomaticAuthenticationService(): void
     {
-        if (GeneralUtility::getApplicationContext()->isProduction()) {
-            throw new NotAllowedException(sprintf('Automatic login is not allowed in Production context. Current context: "%s"', GeneralUtility::getApplicationContext()), 1534842728);
+        if (Environment::getContext()->isProduction()) {
+            throw new NotAllowedException(sprintf('Automatic login is not allowed in Production context. Current context: "%s"', Environment::getContext()), 1534842728);
         }
         if (false === getenv(AutomaticAuthenticationService::TYPO3_AUTOLOGIN_USERNAME_ENVVAR)) {
             static::getLogger()->notice(sprintf(
@@ -56,7 +58,7 @@ class RegisterServiceUtility
                 AutomaticAuthenticationService::class,
                 AutomaticAuthenticationService::TYPO3_AUTOLOGIN_USERNAME_ENVVAR
             ));
-        } elseif (!static::isRequestTypeCli() && !static::isDisableCookieSet()) {
+        } elseif (!Environment::isCli() && !static::isDisableCookieSet()) {
             ExtensionManagementUtility::addService(
                 'sv',
                 'auth',
@@ -68,6 +70,8 @@ class RegisterServiceUtility
                     'available' => true,
                     'priority' => 100,
                     'quality' => 50,
+                    'os' => '',
+                    'exec' => '',
                     'className' => AutomaticAuthenticationService::class,
                 ]
             );
@@ -86,15 +90,5 @@ class RegisterServiceUtility
     protected static function isDisableCookieSet(): bool
     {
         return isset($GLOBALS['_COOKIE'][static::DISABLE_AUTO_LOGIN_COOKIE_NAME]) && $GLOBALS['_COOKIE'][static::DISABLE_AUTO_LOGIN_COOKIE_NAME] === static::DISABLE_AUTO_LOGIN_COOKIE_VALUE;
-    }
-
-    /**
-     * Determine whether this is a CLI request
-     *
-     * @return bool
-     */
-    protected static function isRequestTypeCli(): bool
-    {
-        return (TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_CLI) !== 0;
     }
 }

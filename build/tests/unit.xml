@@ -1,0 +1,30 @@
+<phpunit
+        backupGlobals="true"
+        bootstrap="../../.build/vendor/typo3/testing-framework/Resources/Core/Build/UnitTestsBootstrap.php"
+        colors="true"
+        convertErrorsToExceptions="true"
+        convertWarningsToExceptions="true"
+        forceCoversAnnotation="false"
+        processIsolation="false"
+        stopOnError="false"
+        stopOnFailure="false"
+        stopOnIncomplete="false"
+        stopOnSkipped="false"
+        verbose="false"
+        beStrictAboutTestsThatDoNotTestAnything="true"
+>
+    <testsuites>
+        <testsuite name="Unit tests">
+            <directory>../../tests/Unit</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">../../src</directory>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-html" target="../log/coverage/html/unit" showUncoveredFiles="true" />
+        <log type="coverage-php" target="../log/coverage/clover/unit.cov" showUncoveredFiles="true" />
+    </logging>
+</phpunit>

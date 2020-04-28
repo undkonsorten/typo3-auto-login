@@ -3,8 +3,13 @@
     "description": "Automatically authenticates a TYPO3 CMS back end user for development",
     "type": "library",
     "require": {
-		"php": "^5.5 || ^7.0",
-        "typo3/cms-core": "^9.5"
+		"php": ">= 7.1 < 7.4",
+        "typo3/cms-core": "^9.5 || ^10.4"
+    },
+    "require-dev": {
+        "typo3/testing-framework": "^4.0 || ^5.0 || ^6.0",
+        "phpunit/phpcov": "^5.0",
+        "php-coveralls/php-coveralls": "^2.2"
     },
     "license": "GPL-2.0-or-later",
     "authors": [
@@ -17,5 +22,31 @@
 		"psr-4": {
 			"Undkonsorten\\TYPO3AutoLogin\\": "src/"
 		}
-	}
+	},
+    "extra": {
+        "typo3/cms": {
+            "web-dir": ".build/web"
+        }
+    },
+    "config": {
+        "vendor-dir": ".build/vendor",
+        "bin-dir": ".build/bin"
+    },
+    "scripts": {
+        "test": [
+            "@test:unit",
+            "@test:functional"
+        ],
+
+        "test:unit": "phpunit -c build/tests/unit.xml",
+        "test:functional": "phpunit -c build/tests/functional.xml",
+
+        "test:coverage": [
+            "@test:coverage:merge",
+            "@test:coverage:coveralls"
+        ],
+
+        "test:coverage:merge": "phpcov merge --clover build/log/coverage/clover.xml build/log/coverage/clover",
+        "test:coverage:coveralls": "php-coveralls -x build/log/coverage/clover.xml -o build/log/coverage/coveralls.json"
+    }
 }
