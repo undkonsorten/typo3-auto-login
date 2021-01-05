@@ -1,0 +1,63 @@
+name: Tests
+on: [push, pull_request]
+
+jobs:
+  tests:
+    name: PHP ${{ matrix.php-version }} & TYPO3 ${{ matrix.typo3-version }}
+
+    runs-on: ubuntu-18.04
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: [7.2, 7.3, 7.4]
+        typo3-version: [^9.5, ^10.4]
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: typo3
+        ports:
+          - 3306
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # Prepare environment
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          tools: composer:v1
+          coverage: xdebug
+
+      # Define Composer cache
+      - name: Define Composer cache
+        uses: actions/cache@v1
+        with:
+          path: ~/.composer/cache
+          key: tests-php-${{ matrix.php-version }}-typo3-${{ matrix.typo3-version }}-composer-${{ hashFiles('composer.json') }}
+          restore-keys: |
+            tests-php-${{ matrix.php-version }}-typo3-${{ matrix.typo3-version }}-composer-
+            tests-php-${{ matrix.php-version }}-typo3-
+
+      # Install Composer dependencies
+      - name: Install Composer dependencies
+        run: composer require typo3/minimal:"${{ matrix.typo3-version }}" --prefer-dist --no-progress --no-suggest
+
+      # Run tests
+      - name: Run tests
+        run: composer test -- --coverage-text
+        env:
+          typo3DatabaseName: typo3
+          typo3DatabaseHost: 127.0.0.1
+          typo3DatabasePort: ${{ job.services.mysql.ports[3306] }}
+          typo3DatabaseUsername: root
+          typo3DatabasePassword: root
+
+      # Build coverage report
+      - name: Generate coverage report
+        run: composer test:coverage
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+        if: matrix.php-version == '7.4'

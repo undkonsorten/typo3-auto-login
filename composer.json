@@ -43,7 +43,7 @@
             "@test:coverage:merge",
             "@test:coverage:coveralls"
         ],
-        "test:coverage:merge": "phpcov merge --clover build/log/coverage/clover.xml build/log/coverage/clover",
-        "test:coverage:coveralls": "php-coveralls -x build/log/coverage/clover.xml -o build/log/coverage/coveralls.json"
+        "test:coverage:merge": "phpcov merge --clover .build/log/coverage/clover.xml .build/log/coverage/clover",
+        "test:coverage:coveralls": "php-coveralls -v"
     }
 }

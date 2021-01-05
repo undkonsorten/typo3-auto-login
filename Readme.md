@@ -1,6 +1,6 @@
 # TYPO3 Automatic BE Authentication
 
-[![Pipeline](https://img.shields.io/travis/com/undkonsorten/typo3-auto-login)](https://travis-ci.com/github/undkonsorten/typo3-auto-login)
+[![Tests](https://github.com/undkonsorten/typo3-auto-login/workflows/Tests/badge.svg)](https://github.com/undkonsorten/typo3-auto-login/actions?query=workflow%3ATests)
 [![Coverage](https://img.shields.io/coveralls/github/undkonsorten/typo3-auto-login)](https://coveralls.io/github/undkonsorten/typo3-auto-login)
 
 ## What does it do?
