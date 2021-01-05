@@ -71,6 +71,15 @@ class AutomaticAuthenticationServiceTest extends FunctionalTestCase
     /**
      * @test
      */
+    public function getUserReturnsNullIfSwitchUserIsActive(): void
+    {
+        $this->subject->authInfo = ['userSession' => ['ses_backuserid' => 1]];
+        self::assertNull($this->subject->getUser());
+    }
+
+    /**
+     * @test
+     */
     public function authUserReturnsCorrectAuthenticationState(): void
     {
         $record = $this->subject->getUser();

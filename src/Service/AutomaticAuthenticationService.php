@@ -29,6 +29,9 @@ class AutomaticAuthenticationService extends AbstractAuthenticationService
 
     public function getUser()
     {
+        if ($this->isSwitchUserActive()) {
+            return null;
+        }
         return $this->fetchUserRecord(getenv(self::TYPO3_AUTOLOGIN_USERNAME_ENVVAR));
     }
 
@@ -37,5 +40,10 @@ class AutomaticAuthenticationService extends AbstractAuthenticationService
         array $user
     ): int {
         return 200;
+    }
+
+    private function isSwitchUserActive(): bool
+    {
+        return (bool)($this->authInfo['userSession']['ses_backuserid'] ?? false);
     }
 }
