@@ -3,12 +3,12 @@
     "description": "Automatically authenticates a TYPO3 CMS back end user for development",
     "type": "library",
     "require": {
-		"php": ">= 7.1 < 7.5",
-        "typo3/cms-core": "^9.5 || ^10.4"
+        "php": "^7.1",
+        "typo3/cms-core": "^9.5 || ^10.4 || ~11.0"
     },
     "require-dev": {
         "typo3/testing-framework": "^4.0 || ^5.0 || ^6.0",
-        "phpunit/phpcov": "^5.0",
+        "phpunit/phpcov": "^5.0 || ^6.0 || ^7.0 || ^8.0",
         "php-coveralls/php-coveralls": "^2.2"
     },
     "license": "GPL-2.0-or-later",
@@ -18,11 +18,11 @@
             "email": "felix.althaus@undkonsorten.com"
         }
     ],
-	"autoload": {
-		"psr-4": {
-			"Undkonsorten\\TYPO3AutoLogin\\": "src/"
-		}
-	},
+    "autoload": {
+        "psr-4": {
+            "Undkonsorten\\TYPO3AutoLogin\\": "src/"
+        }
+    },
     "extra": {
         "typo3/cms": {
             "web-dir": ".build/web"
@@ -37,15 +37,12 @@
             "@test:unit",
             "@test:functional"
         ],
-
         "test:unit": "phpunit -c build/tests/unit.xml",
         "test:functional": "phpunit -c build/tests/functional.xml",
-
         "test:coverage": [
             "@test:coverage:merge",
             "@test:coverage:coveralls"
         ],
-
         "test:coverage:merge": "phpcov merge --clover build/log/coverage/clover.xml build/log/coverage/clover",
         "test:coverage:coveralls": "php-coveralls -x build/log/coverage/clover.xml -o build/log/coverage/coveralls.json"
     }
