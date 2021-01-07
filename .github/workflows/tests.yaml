@@ -11,6 +11,9 @@ jobs:
       matrix:
         php-version: [7.2, 7.3, 7.4]
         typo3-version: [^9.5, ^10.4]
+        include:
+          - php-version: 7.4
+            typo3-version: ~11.0
     services:
       mysql:
         image: mysql:5.7
