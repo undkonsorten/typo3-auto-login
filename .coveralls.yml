@@ -1,3 +1,0 @@
-coverage_clover: .build/log/coverage/clover.xml
-json_path: .build/log/coverage/coveralls.json
-service_name: Github Action
