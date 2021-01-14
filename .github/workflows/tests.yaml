@@ -33,7 +33,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           tools: composer:v1
-          coverage: xdebug
+          coverage: ${{ matrix.coverage && 'xdebug' || 'none' }}
 
       # Define Composer cache
       - name: Define Composer cache
