@@ -22,6 +22,8 @@ namespace Undkonsorten\TYPO3AutoLogin\Tests\Functional\Service;
  */
 
 use Doctrine\DBAL\DBALException;
+use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\CMS\Core\Session\UserSession;
 use TYPO3\TestingFramework\Core\Exception;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use Undkonsorten\TYPO3AutoLogin\Service\AutomaticAuthenticationService;
@@ -71,9 +73,30 @@ class AutomaticAuthenticationServiceTest extends FunctionalTestCase
     /**
      * @test
      */
+    public function getUserReturnsNullIfSwitchUserIsActive(): void
+    {
+        $this->subject->authInfo = ['userSession' => ['ses_backuserid' => 1]];
+        self::assertNull($this->subject->getUser(), 'old session handling (TYPO3 < 11)');
+
+        if ($this->providesNewSessionHandling()) {
+            $session = UserSession::createNonFixated('foo');
+            $session->set('backuserid', 1);
+            $this->subject->authInfo = ['session' => $session];
+            self::assertNull($this->subject->getUser(), 'new session handling (TYPO3 >= 11)');
+        }
+    }
+
+    /**
+     * @test
+     */
     public function authUserReturnsCorrectAuthenticationState(): void
     {
         $record = $this->subject->getUser();
         self::assertEquals(200, $this->subject->authUser($record));
+    }
+
+    private function providesNewSessionHandling(): bool
+    {
+        return (new Typo3Version())->getMajorVersion() >= 11;
     }
 }

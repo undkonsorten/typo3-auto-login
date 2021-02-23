@@ -2,3 +2,4 @@
 /var
 /build/log
 /composer.lock
+.phpunit.result.cache

@@ -24,7 +24,7 @@
         </whitelist>
     </filter>
     <logging>
-        <log type="coverage-html" target="../log/coverage/html/functional" showUncoveredFiles="true" />
-        <log type="coverage-php" target="../log/coverage/clover/functional.cov" showUncoveredFiles="true" />
+        <log type="coverage-html" target="../../.build/log/coverage/html/functional" showUncoveredFiles="true" />
+        <log type="coverage-php" target="../../.build/log/coverage/clover/functional.cov" showUncoveredFiles="true" />
     </logging>
 </phpunit>

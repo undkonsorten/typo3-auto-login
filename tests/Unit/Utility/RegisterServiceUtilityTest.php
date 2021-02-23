@@ -73,6 +73,8 @@ class RegisterServiceUtilityTest extends UnitTestCase
      */
     public function registerAutomaticAuthenticationServiceLogsNoticeAndExitsIfEnvironmentVariableIsNotSet(): void
     {
+        $this->simulateEnvironment('Development/Simulation', false);
+
         // Unset environment variable first
         putenv(AutomaticAuthenticationService::TYPO3_AUTOLOGIN_USERNAME_ENVVAR);
 
@@ -92,7 +94,7 @@ class RegisterServiceUtilityTest extends UnitTestCase
      */
     public function registerAutomaticAuthenticationServiceExitsIfRequestIsInCliMode(): void
     {
-        $this->simulateEnvironment(null, true);
+        $this->simulateEnvironment('Development/Simulation', true);
 
         RegisterServiceUtility::registerAutomaticAuthenticationService();
         self::assertArrayNotHasKey(AutomaticAuthenticationService::class, $GLOBALS['T3_SERVICES']['auth'] ?? []);
@@ -104,7 +106,7 @@ class RegisterServiceUtilityTest extends UnitTestCase
      */
     public function registerAutomaticAuthenticationServiceExitsIfDisableCookieIsSet(): void
     {
-        $this->simulateEnvironment(null, false);
+        $this->simulateEnvironment('Development/Simulation', false);
         $GLOBALS['_COOKIE']['_typo3-auto-login'] = 'disable';
 
         RegisterServiceUtility::registerAutomaticAuthenticationService();
