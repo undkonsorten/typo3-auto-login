@@ -59,19 +59,12 @@ jobs:
           tools: composer:v2
           coverage: ${{ matrix.coverage && 'xdebug' || 'none' }}
 
-      # Define Composer cache
-      - name: Define Composer cache
-        uses: actions/cache@v1
-        with:
-          path: ~/.composer/cache
-          key: tests-php-${{ matrix.php-version }}-typo3-${{ matrix.typo3-version }}-composer-${{ hashFiles('composer.json') }}
-          restore-keys: |
-            tests-php-${{ matrix.php-version }}-typo3-${{ matrix.typo3-version }}-composer-
-            tests-php-${{ matrix.php-version }}-typo3-
-
       # Install Composer dependencies
       - name: Install Composer dependencies
-        run: composer require typo3/minimal:"~${{ matrix.typo3-version }}" --prefer-dist --no-progress
+        uses: ramsey/composer-install@v2
+        with:
+          dependency-versions: "highest"
+          composer-options: "--with=typo3/cms-core:~${{ matrix.typo3-version }}"
 
       # Run tests
       - name: Run tests
