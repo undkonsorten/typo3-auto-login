@@ -21,7 +21,8 @@ namespace Undkonsorten\TYPO3AutoLogin\Tests\Unit\Utility;
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Prophecy\Argument;
+use PHPUnit\Framework\Constraint\IsType;
+use PHPUnit\Framework\MockObject\Stub\ReturnCallback;
 use TYPO3\CMS\Core\Core\ApplicationContext;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Exception;
@@ -75,19 +76,33 @@ class RegisterServiceUtilityTest extends UnitTestCase
      */
     public function registerAutomaticAuthenticationServiceLogsNoticeAndExitsIfEnvironmentVariableIsNotSet(): void
     {
+        $loggerIsCalled = false;
+
         $this->simulateEnvironment('Development/Simulation', false);
 
         // Unset environment variable first
         putenv(AutomaticAuthenticationService::TYPO3_AUTOLOGIN_USERNAME_ENVVAR);
 
         // Provide Logger
-        $logManagerProphecy = $this->prophesize(LogManager::class);
-        $loggerProphecy = $this->prophesize(Logger::class);
-        $logManagerProphecy->getLogger(RegisterServiceUtility::class)->willReturn($loggerProphecy->reveal());
-        GeneralUtility::setSingletonInstance(LogManager::class, $logManagerProphecy->reveal());
+        $logManagerMock = $this->createMock(LogManager::class);
+        $loggerMock = $this->createMock(Logger::class);
+        $logManagerMock->method('getLogger')
+            ->with(RegisterServiceUtility::class)
+            ->willReturn($loggerMock)
+        ;
 
-        $loggerProphecy->notice(Argument::type('string'))->shouldBeCalledOnce();
+        GeneralUtility::setSingletonInstance(LogManager::class, $logManagerMock);
+
+        $loggerMock->method('notice')
+            ->with(new IsType('string'))
+            ->will(new ReturnCallback(function () use (&$loggerIsCalled) {
+                $loggerIsCalled = true;
+            }))
+        ;
+
         RegisterServiceUtility::registerAutomaticAuthenticationService();
+
+        self::assertTrue($loggerIsCalled);
     }
 
     /**
