@@ -21,8 +21,8 @@ namespace Undkonsorten\TYPO3AutoLogin\Tests\Functional\Service;
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Information\Typo3Version;
-use TYPO3\CMS\Core\Session\UserSession;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use Undkonsorten\TYPO3AutoLogin\Service\AutomaticAuthenticationService;
 
@@ -39,6 +39,11 @@ class AutomaticAuthenticationServiceTest extends FunctionalTestCase
      */
     protected $subject;
 
+    /**
+     * @var BackendUserAuthentication
+     */
+    protected $backendUser;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -46,12 +51,16 @@ class AutomaticAuthenticationServiceTest extends FunctionalTestCase
         // Provide environment variable for authentication process
         putenv(AutomaticAuthenticationService::TYPO3_AUTOLOGIN_USERNAME_ENVVAR . '=dummy');
 
-        // Build subject
-        $this->subject = new AutomaticAuthenticationService();
-        $this->subject->db_user = ['table' => 'be_users', 'username_column' => 'username', 'check_pid_clause' => '', 'enable_clause' => ''];
-
         // Import user record
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/be_users.csv');
+
+        // Workaround for TYPO3 9.5 to properly handle ip lock of backend user sessions
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+
+        // Build subject
+        $this->subject = new AutomaticAuthenticationService();
+        $this->subject->pObj = $this->backendUser = $this->setUpBackendUser(1);
+        $this->subject->db_user = ['table' => 'be_users', 'username_column' => 'username', 'check_pid_clause' => '', 'enable_clause' => ''];
     }
 
     /**
@@ -69,14 +78,12 @@ class AutomaticAuthenticationServiceTest extends FunctionalTestCase
      */
     public function getUserReturnsNullIfSwitchUserIsActive(): void
     {
-        $this->subject->authInfo = ['userSession' => ['ses_backuserid' => 1]];
-        self::assertNull($this->subject->getUser(), 'old session handling (TYPO3 < 11)');
-
         if ($this->providesNewSessionHandling()) {
-            $session = UserSession::createNonFixated('foo');
-            $session->set('backuserid', 1);
-            $this->subject->authInfo = ['session' => $session];
+            $this->backendUser->getSession()->set('backuserid', 1);
             self::assertNull($this->subject->getUser(), 'new session handling (TYPO3 >= 11)');
+        } else {
+            $this->subject->authInfo = ['userSession' => ['ses_backuserid' => 1]];
+            self::assertNull($this->subject->getUser(), 'old session handling (TYPO3 < 11)');
         }
     }
 
