@@ -71,7 +71,7 @@ jobs:
 
       # Install Composer dependencies
       - name: Install Composer dependencies
-        run: composer require typo3/minimal:"~${{ matrix.typo3-version }}" --prefer-dist --no-progress --no-suggest
+        run: composer require typo3/minimal:"~${{ matrix.typo3-version }}" --prefer-dist --no-progress
 
       # Run tests
       - name: Run tests
