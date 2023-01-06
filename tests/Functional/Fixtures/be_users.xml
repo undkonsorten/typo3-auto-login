@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<dataset>
-    <be_users>
-        <uid>1</uid>
-        <pid>0</pid>
-        <username>dummy</username>
-        <deleted>0</deleted>
-    </be_users>
-</dataset>

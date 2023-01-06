@@ -21,10 +21,8 @@ namespace Undkonsorten\TYPO3AutoLogin\Tests\Functional\Service;
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Doctrine\DBAL\DBALException;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Session\UserSession;
-use TYPO3\TestingFramework\Core\Exception;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use Undkonsorten\TYPO3AutoLogin\Service\AutomaticAuthenticationService;
 
@@ -41,10 +39,6 @@ class AutomaticAuthenticationServiceTest extends FunctionalTestCase
      */
     protected $subject;
 
-    /**
-     * @throws DBALException
-     * @throws Exception
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -57,7 +51,7 @@ class AutomaticAuthenticationServiceTest extends FunctionalTestCase
         $this->subject->db_user = ['table' => 'be_users', 'username_column' => 'username', 'check_pid_clause' => '', 'enable_clause' => ''];
 
         // Import user record
-        $this->importDataSet(__DIR__ . '/../Fixtures/be_users.xml');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/be_users.csv');
     }
 
     /**
