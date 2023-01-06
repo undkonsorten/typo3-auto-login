@@ -42,11 +42,13 @@ use Undkonsorten\TYPO3AutoLogin\Utility\RegisterServiceUtility;
  */
 class RegisterServiceUtilityTest extends UnitTestCase
 {
-    protected $backupEnvironment = true;
-    protected $resetSingletonInstances = true;
-
     protected function setUp(): void
     {
+        // @todo Should be moved back to property declaration once TF v7
+        //       is required as minimal installable version
+        $this->backupEnvironment = true;
+        $this->resetSingletonInstances = true;
+
         parent::setUp();
 
         // Provide environment variable for authentication process
