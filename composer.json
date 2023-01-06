@@ -23,6 +23,11 @@
             "Undkonsorten\\TYPO3AutoLogin\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Undkonsorten\\TYPO3AutoLogin\\Tests\\": "tests/"
+        }
+    },
     "extra": {
         "typo3/cms": {
             "web-dir": ".build/web"
