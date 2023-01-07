@@ -51,11 +51,12 @@ class AutomaticAuthenticationServiceTest extends FunctionalTestCase
         // Provide environment variable for authentication process
         putenv(AutomaticAuthenticationService::TYPO3_AUTOLOGIN_USERNAME_ENVVAR . '=dummy');
 
-        // Import user record
-        $this->importCSVDataSet(__DIR__ . '/../Fixtures/be_users.csv');
-
-        // Workaround for TYPO3 9.5 to properly handle ip lock of backend user sessions
-        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+        // Import user record (TYPO3 < 11 provides an additional "disableIPlock" column)
+        if ($this->providesNewSessionHandling()) {
+            $this->importCSVDataSet(__DIR__ . '/../Fixtures/be_users.csv');
+        } else {
+            $this->importCSVDataSet(__DIR__ . '/../Fixtures/be_users_legacy.csv');
+        }
 
         // Build subject
         $this->subject = new AutomaticAuthenticationService();
