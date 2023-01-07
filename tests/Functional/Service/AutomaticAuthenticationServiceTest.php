@@ -78,6 +78,34 @@ class AutomaticAuthenticationServiceTest extends FunctionalTestCase
     /**
      * @test
      */
+    public function getUserReturnsFalseIfConfiguredUserDoesNotExist(): void
+    {
+        // Configure invalid user for automatic login
+        putenv(AutomaticAuthenticationService::TYPO3_AUTOLOGIN_USERNAME_ENVVAR . '=invalid');
+
+        // Make sure switch user functionality is disabled
+        $this->backendUser->getSession()->set('backuserid', 0);
+
+        self::assertFalse($this->subject->getUser());
+    }
+
+    /**
+     * @test
+     */
+    public function getUserBypassesMFA(): void
+    {
+        self::assertNotTrue($this->backendUser->getSession()->get('mfa'));
+
+        $actual = $this->subject->getUser();
+
+        self::assertIsArray($actual);
+        self::assertNull($actual['mfa']);
+        self::assertTrue($this->backendUser->getSession()->get('mfa'));
+    }
+
+    /**
+     * @test
+     */
     public function authUserReturnsCorrectAuthenticationState(): void
     {
         self::assertEquals(200, $this->subject->authUser());

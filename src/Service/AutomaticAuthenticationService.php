@@ -36,7 +36,18 @@ class AutomaticAuthenticationService extends AbstractAuthenticationService
             return false;
         }
 
-        return $this->fetchUserRecord(getenv(self::TYPO3_AUTOLOGIN_USERNAME_ENVVAR));
+        $user = $this->fetchUserRecord(getenv(self::TYPO3_AUTOLOGIN_USERNAME_ENVVAR));
+
+        // Early return if user record is invalid
+        if (!is_array($user)) {
+            return false;
+        }
+
+        // Bypass MFA for current user
+        $this->pObj->getSession()->set('mfa', true);
+        $user['mfa'] = null;
+
+        return $user;
     }
 
     public function authUser(): int
