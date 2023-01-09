@@ -44,7 +44,7 @@
     },
     "scripts": {
         "post-autoload-dump": [
-            "# The above lines can be removed once TF v7 is stable",
+            "# The following lines can be removed once TF v7 is stable",
             "mkdir -p .build/web/typo3/sysext",
             "[ -d .build/web/typo3/sysext/backend ] || ln -sfn ../../../vendor/typo3/cms-backend .build/web/typo3/sysext/backend",
             "[ -d .build/web/typo3/sysext/core ] || ln -sfn ../../../vendor/typo3/cms-core .build/web/typo3/sysext/core",
