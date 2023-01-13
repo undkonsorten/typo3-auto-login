@@ -5,17 +5,39 @@ jobs:
   tests:
     name: PHP ${{ matrix.php-version }} & TYPO3 ${{ matrix.typo3-version }}
 
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        php-version: [7.4, 7.3, 7.2]
-        typo3-version: [10.4, 9.5]
         include:
-          - php-version: 7.4
-            typo3-version: 11.4
-          - php-version: 8.0
-            typo3-version: 11.4
+          # TYPO3 9.5
+          - php-version: "7.2"
+            typo3-version: "9.5"
+          - php-version: "7.3"
+            typo3-version: "9.5"
+          - php-version: "7.4"
+            typo3-version: "9.5"
+          # TYPO3 10.4
+          - php-version: "7.2"
+            typo3-version: "10.4"
+          - php-version: "7.3"
+            typo3-version: "10.4"
+          - php-version: "7.4"
+            typo3-version: "10.4"
+          # TYPO3 11.5
+          - php-version: "7.4"
+            typo3-version: "11.5"
+          - php-version: "8.0"
+            typo3-version: "11.5"
+          - php-version: "8.1"
+            typo3-version: "11.5"
+          - php-version: "8.2"
+            typo3-version: "11.5"
+          # TYPO3 12.0
+          - php-version: "8.1"
+            typo3-version: "12.0"
+          - php-version: "8.2"
+            typo3-version: "12.0"
             coverage: true
     services:
       mysql:
@@ -37,19 +59,12 @@ jobs:
           tools: composer:v2
           coverage: ${{ matrix.coverage && 'xdebug' || 'none' }}
 
-      # Define Composer cache
-      - name: Define Composer cache
-        uses: actions/cache@v1
-        with:
-          path: ~/.composer/cache
-          key: tests-php-${{ matrix.php-version }}-typo3-${{ matrix.typo3-version }}-composer-${{ hashFiles('composer.json') }}
-          restore-keys: |
-            tests-php-${{ matrix.php-version }}-typo3-${{ matrix.typo3-version }}-composer-
-            tests-php-${{ matrix.php-version }}-typo3-
-
       # Install Composer dependencies
       - name: Install Composer dependencies
-        run: composer require typo3/minimal:"~${{ matrix.typo3-version }}" --prefer-dist --no-progress --no-suggest
+        uses: ramsey/composer-install@v2
+        with:
+          dependency-versions: "highest"
+          composer-options: "--with=typo3/cms-core:~${{ matrix.typo3-version }}"
 
       # Run tests
       - name: Run tests
