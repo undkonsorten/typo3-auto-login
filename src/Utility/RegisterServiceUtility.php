@@ -39,11 +39,6 @@ class RegisterServiceUtility
      */
     protected const DISABLE_AUTO_LOGIN_COOKIE_VALUE = 'disable';
 
-    protected static function getLogger(): Logger
-    {
-        return GeneralUtility::makeInstance(LogManager::class)->getLogger(__CLASS__);
-    }
-
     /**
      * @throws NotAllowedException
      */
@@ -84,11 +79,15 @@ class RegisterServiceUtility
 
     /**
      * Checks whether the cookie to disable autologin is set
-     *
-     * @return bool
      */
     protected static function isDisableCookieSet(): bool
     {
-        return isset($GLOBALS['_COOKIE'][static::DISABLE_AUTO_LOGIN_COOKIE_NAME]) && $GLOBALS['_COOKIE'][static::DISABLE_AUTO_LOGIN_COOKIE_NAME] === static::DISABLE_AUTO_LOGIN_COOKIE_VALUE;
+        return isset($GLOBALS['_COOKIE'][static::DISABLE_AUTO_LOGIN_COOKIE_NAME])
+            && $GLOBALS['_COOKIE'][static::DISABLE_AUTO_LOGIN_COOKIE_NAME] === static::DISABLE_AUTO_LOGIN_COOKIE_VALUE;
+    }
+
+    protected static function getLogger(): Logger
+    {
+        return GeneralUtility::makeInstance(LogManager::class)->getLogger(self::class);
     }
 }

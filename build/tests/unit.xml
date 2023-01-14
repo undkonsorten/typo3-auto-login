@@ -1,30 +1,22 @@
-<phpunit
-        backupGlobals="true"
-        bootstrap="../../.build/vendor/typo3/testing-framework/Resources/Core/Build/UnitTestsBootstrap.php"
-        colors="true"
-        convertErrorsToExceptions="true"
-        convertWarningsToExceptions="true"
-        forceCoversAnnotation="false"
-        processIsolation="false"
-        stopOnError="false"
-        stopOnFailure="false"
-        stopOnIncomplete="false"
-        stopOnSkipped="false"
-        verbose="false"
-        beStrictAboutTestsThatDoNotTestAnything="true"
+<?xml version="1.0"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         backupGlobals="true"
+         bootstrap="../../.build/vendor/typo3/testing-framework/Resources/Core/Build/UnitTestsBootstrap.php"
+         colors="true"
+         xsi:noNamespaceSchemaLocation="../../.build/vendor/phpunit/phpunit/phpunit.xsd"
 >
     <testsuites>
         <testsuite name="Unit tests">
             <directory>../../tests/Unit</directory>
         </testsuite>
     </testsuites>
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
+    <coverage processUncoveredFiles="true">
+        <include>
             <directory suffix=".php">../../src</directory>
-        </whitelist>
-    </filter>
-    <logging>
-        <log type="coverage-html" target="../../.build/log/coverage/html/unit" showUncoveredFiles="true" />
-        <log type="coverage-php" target="../../.build/log/coverage/clover/unit.cov" showUncoveredFiles="true" />
-    </logging>
+        </include>
+        <report>
+            <html outputDirectory="../../.build/log/coverage/html/unit"/>
+            <php outputFile="../../.build/log/coverage/clover/unit.cov"/>
+        </report>
+    </coverage>
 </phpunit>

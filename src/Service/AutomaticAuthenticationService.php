@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Undkonsorten\TYPO3AutoLogin\Service;
 
 use TYPO3\CMS\Core\Authentication\AbstractAuthenticationService;
-use TYPO3\CMS\Core\Information\Typo3Version;
 
 /**
  * This file is part of the composer package "undkonsorten/typo3-auto-login" for use with TYPO3 CMS.
@@ -45,15 +44,6 @@ class AutomaticAuthenticationService extends AbstractAuthenticationService
 
     private function isSwitchUserActive(): bool
     {
-        if ($this->usesNewSessionHandling()) {
-            return (bool)$this->pObj->getSession()->get('backuserid');
-        }
-
-        return (bool)($this->authInfo['userSession']['ses_backuserid'] ?? false);
-    }
-
-    private function usesNewSessionHandling(): bool
-    {
-        return (new Typo3Version())->getMajorVersion() >= 11;
+        return (bool)$this->pObj->getSession()->get('backuserid');
     }
 }
