@@ -34,7 +34,7 @@ jobs:
 
       # Check Composer dependencies
       - name: Check dependencies
-        run: composer-require-checker check --config-file dependency-checker.json
+        run: composer-require-checker check
       - run: composer install --no-progress
       - name: Check for unused dependencies
         run: composer-unused
