@@ -10,7 +10,8 @@
         "typo3/testing-framework": "^7.0@dev",
         "typo3/minimal": "^11.0 || ^12.0",
         "phpunit/phpcov": "^8.0",
-        "php-coveralls/php-coveralls": "^2.2"
+        "php-coveralls/php-coveralls": "^2.2",
+        "ssch/typo3-rector": "^1.1"
     },
     "license": "GPL-2.0-or-later",
     "authors": [
@@ -53,6 +54,10 @@
             "[ -d .build/web/typo3/sysext/frontend ] || ln -sfn ../../../vendor/typo3/cms-frontend .build/web/typo3/sysext/frontend",
             "[ -d .build/web/typo3/sysext/install ] || ln -sfn ../../../vendor/typo3/cms-install .build/web/typo3/sysext/install"
         ],
+        "migration": [
+            "@migration:rector"
+        ],
+        "migration:rector": "rector process -c build/cgl/rector.php",
         "test": [
             "@test:unit",
             "@test:functional"
