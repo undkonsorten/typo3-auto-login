@@ -67,10 +67,10 @@ class AutomaticAuthenticationServiceTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getUserReturnsNullIfSwitchUserIsActive(): void
+    public function getUserReturnsFalseIfSwitchUserIsActive(): void
     {
         $this->backendUser->getSession()->set('backuserid', 1);
-        self::assertNull($this->subject->getUser());
+        self::assertFalse($this->subject->getUser());
     }
 
     /**

@@ -27,11 +27,15 @@ class AutomaticAuthenticationService extends AbstractAuthenticationService
      */
     public const TYPO3_AUTOLOGIN_USERNAME_ENVVAR = 'TYPO3_AUTOLOGIN_USERNAME';
 
-    public function getUser()
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function getUser(): array|false
     {
         if ($this->isSwitchUserActive()) {
-            return null;
+            return false;
         }
+
         return $this->fetchUserRecord(getenv(self::TYPO3_AUTOLOGIN_USERNAME_ENVVAR));
     }
 
