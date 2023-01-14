@@ -70,9 +70,10 @@ class RegisterServiceUtility
                     'className' => AutomaticAuthenticationService::class,
                 ]
             );
-            /** @noinspection UnsupportedStringOffsetOperationsInspection */
+
+            /* @phpstan-ignore-next-line */
             $GLOBALS['TYPO3_CONF_VARS']['SVCONF']['auth']['setup']['BE_alwaysFetchUser'] = true;
-            /** @noinspection UnsupportedStringOffsetOperationsInspection */
+            /* @phpstan-ignore-next-line */
             $GLOBALS['TYPO3_CONF_VARS']['SVCONF']['auth']['setup']['BE_alwaysAuthUser'] = true;
         }
     }
@@ -82,7 +83,8 @@ class RegisterServiceUtility
      */
     protected static function isDisableCookieSet(): bool
     {
-        return isset($GLOBALS['_COOKIE'][static::DISABLE_AUTO_LOGIN_COOKIE_NAME])
+        return is_array($GLOBALS['_COOKIE'] ?? null)
+            && isset($GLOBALS['_COOKIE'][static::DISABLE_AUTO_LOGIN_COOKIE_NAME])
             && $GLOBALS['_COOKIE'][static::DISABLE_AUTO_LOGIN_COOKIE_NAME] === static::DISABLE_AUTO_LOGIN_COOKIE_VALUE;
     }
 

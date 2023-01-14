@@ -32,17 +32,15 @@ class AutomaticAuthenticationService extends AbstractAuthenticationService
      */
     public function getUser(): array|false
     {
-        if ($this->isSwitchUserActive()) {
+        if ($this->isSwitchUserActive() || getenv(self::TYPO3_AUTOLOGIN_USERNAME_ENVVAR) === false) {
             return false;
         }
 
         return $this->fetchUserRecord(getenv(self::TYPO3_AUTOLOGIN_USERNAME_ENVVAR));
     }
 
-    public function authUser(
-        /** @noinspection PhpUnusedParameterInspection */
-        array $user
-    ): int {
+    public function authUser(): int
+    {
         return 200;
     }
 

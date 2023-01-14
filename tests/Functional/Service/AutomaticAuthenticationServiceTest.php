@@ -60,6 +60,8 @@ class AutomaticAuthenticationServiceTest extends FunctionalTestCase
     public function getUserReturnsUserRecordAssociatedWithAutologinUsername(): void
     {
         $record = $this->subject->getUser();
+
+        self::assertIsArray($record);
         self::assertEquals(1, $record['uid']);
         self::assertEquals('dummy', $record['username']);
     }
@@ -78,7 +80,6 @@ class AutomaticAuthenticationServiceTest extends FunctionalTestCase
      */
     public function authUserReturnsCorrectAuthenticationState(): void
     {
-        $record = $this->subject->getUser();
-        self::assertEquals(200, $this->subject->authUser($record));
+        self::assertEquals(200, $this->subject->authUser());
     }
 }

@@ -114,7 +114,9 @@ class RegisterServiceUtilityTest extends UnitTestCase
         $this->simulateEnvironment('Development/Simulation', true);
 
         RegisterServiceUtility::registerAutomaticAuthenticationService();
-        self::assertArrayNotHasKey(AutomaticAuthenticationService::class, $GLOBALS['T3_SERVICES']['auth'] ?? []);
+
+        self::assertIsArray($GLOBALS['T3_SERVICES']);
+        self::assertArrayNotHasKey('auth', $GLOBALS['T3_SERVICES']);
     }
 
     /**
@@ -124,10 +126,12 @@ class RegisterServiceUtilityTest extends UnitTestCase
     public function registerAutomaticAuthenticationServiceExitsIfDisableCookieIsSet(): void
     {
         $this->simulateEnvironment('Development/Simulation', false);
-        $GLOBALS['_COOKIE']['_typo3-auto-login'] = 'disable';
+        $this->setAutoLoginCookie('disable');
 
         RegisterServiceUtility::registerAutomaticAuthenticationService();
-        self::assertArrayNotHasKey(AutomaticAuthenticationService::class, $GLOBALS['T3_SERVICES']['auth'] ?? []);
+
+        self::assertIsArray($GLOBALS['T3_SERVICES']);
+        self::assertArrayNotHasKey('auth', $GLOBALS['T3_SERVICES']);
     }
 
     /**
@@ -139,11 +143,16 @@ class RegisterServiceUtilityTest extends UnitTestCase
     {
         // Ensure requirements are met
         $this->simulateEnvironment('Development/Simulation', false);
-        unset($GLOBALS['_COOKIE']['_typo3-auto-login']);
+        $this->setAutoLoginCookie(null);
 
         RegisterServiceUtility::registerAutomaticAuthenticationService();
-        self::assertIsArray(ExtensionManagementUtility::findServiceByKey(AutomaticAuthenticationService::class));
+
+        // No-op to test if no exception is thrown
+        ExtensionManagementUtility::findServiceByKey(AutomaticAuthenticationService::class);
+
+        /* @phpstan-ignore-next-line */
         self::assertTrue($GLOBALS['TYPO3_CONF_VARS']['SVCONF']['auth']['setup']['BE_alwaysFetchUser']);
+        /* @phpstan-ignore-next-line */
         self::assertTrue($GLOBALS['TYPO3_CONF_VARS']['SVCONF']['auth']['setup']['BE_alwaysAuthUser']);
     }
 
@@ -161,5 +170,16 @@ class RegisterServiceUtilityTest extends UnitTestCase
             Environment::getCurrentScript(),
             Environment::isWindows() ? 'WINDOWS' : 'UNIX'
         );
+    }
+
+    protected function setAutoLoginCookie(string|null $value): void
+    {
+        self::assertIsArray($GLOBALS['_COOKIE'] ?? null);
+
+        if ($value === null) {
+            unset($GLOBALS['_COOKIE']['_typo3-auto-login']);
+        } else {
+            $GLOBALS['_COOKIE']['_typo3-auto-login'] = $value;
+        }
     }
 }

@@ -17,7 +17,12 @@
 		"armin/editorconfig-cli": "^1.5",
 		"ergebnis/composer-normalize": "^2.29",
 		"php-coveralls/php-coveralls": "^2.2",
+		"phpstan/extension-installer": "^1.2",
+		"phpstan/phpstan": "^1.9",
+		"phpstan/phpstan-phpunit": "^1.3",
+		"phpstan/phpstan-strict-rules": "^1.4",
 		"phpunit/phpcov": "^8.0",
+		"saschaegerer/phpstan-typo3": "^1.8",
 		"ssch/typo3-rector": "^1.1",
 		"typo3/coding-standards": "^0.7",
 		"typo3/minimal": "^11.0 || ^12.0",
@@ -36,6 +41,7 @@
 	"config": {
 		"allow-plugins": {
 			"ergebnis/composer-normalize": true,
+			"phpstan/extension-installer": true,
 			"typo3/class-alias-loader": true,
 			"typo3/cms-composer-installers": true
 		},
@@ -71,6 +77,10 @@
 			"@migration:rector"
 		],
 		"migration:rector": "rector process -c build/cgl/rector.php",
+		"sca": [
+			"@sca:php"
+		],
+		"sca:php": "phpstan analyse -c build/cgl/phpstan.neon",
 		"test": [
 			"@test:unit",
 			"@test:functional"
