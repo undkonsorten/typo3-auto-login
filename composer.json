@@ -11,7 +11,7 @@
 	],
 	"require": {
 		"php": "~8.0.0 || ~8.1.0 || ~8.2.0",
-		"typo3/cms-core": "^11.0 || ^12.0"
+		"typo3/cms-core": "^11.5.4 || ^12.0"
 	},
 	"require-dev": {
 		"armin/editorconfig-cli": "^1.5",
