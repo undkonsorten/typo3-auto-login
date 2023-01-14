@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Undkonsorten\TYPO3AutoLogin\Utility;
@@ -28,7 +29,6 @@ use Undkonsorten\TYPO3AutoLogin\Service\AutomaticAuthenticationService;
  */
 class RegisterServiceUtility
 {
-
     /**
      * Name of the cookie that disables autologin
      */
@@ -47,7 +47,7 @@ class RegisterServiceUtility
         if (Environment::getContext()->isProduction()) {
             throw new NotAllowedException(sprintf('Automatic login is not allowed in Production context. Current context: "%s"', Environment::getContext()), 1534842728);
         }
-        if (false === getenv(AutomaticAuthenticationService::TYPO3_AUTOLOGIN_USERNAME_ENVVAR)) {
+        if (getenv(AutomaticAuthenticationService::TYPO3_AUTOLOGIN_USERNAME_ENVVAR) === false) {
             static::getLogger()->notice(sprintf(
                 '%s is enabled but no username given. Please set environment variable "%s".',
                 AutomaticAuthenticationService::class,

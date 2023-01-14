@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Undkonsorten\TYPO3AutoLogin\Service;
@@ -21,7 +22,6 @@ use TYPO3\CMS\Core\Authentication\AbstractAuthenticationService;
  */
 class AutomaticAuthenticationService extends AbstractAuthenticationService
 {
-
     /**
      * Name of the environment variable that defines the BE user name
      */

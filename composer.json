@@ -1,74 +1,82 @@
 {
-    "name": "undkonsorten/typo3-auto-login",
-    "description": "Automatically authenticates a TYPO3 CMS back end user for development",
-    "type": "library",
-    "require": {
-        "php": "~8.0.0 || ~8.1.0 || ~8.2.0",
-        "typo3/cms-core": "^11.0 || ^12.0"
-    },
-    "require-dev": {
-        "typo3/testing-framework": "^7.0@dev",
-        "typo3/minimal": "^11.0 || ^12.0",
-        "phpunit/phpcov": "^8.0",
-        "php-coveralls/php-coveralls": "^2.2",
-        "ssch/typo3-rector": "^1.1"
-    },
-    "license": "GPL-2.0-or-later",
-    "authors": [
-        {
-            "name": "Felix Althaus",
-            "email": "felix.althaus@undkonsorten.com"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "Undkonsorten\\TYPO3AutoLogin\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Undkonsorten\\TYPO3AutoLogin\\Tests\\": "tests/"
-        }
-    },
-    "extra": {
-        "typo3/cms": {
-            "web-dir": ".build/web"
-        }
-    },
-    "config": {
-        "vendor-dir": ".build/vendor",
-        "bin-dir": ".build/bin",
-        "allow-plugins": {
-            "typo3/class-alias-loader": true,
-            "typo3/cms-composer-installers": true
-        }
-    },
-    "scripts": {
-        "post-autoload-dump": [
-            "# The following lines can be removed once TF v7 is stable",
-            "mkdir -p .build/web/typo3/sysext",
-            "[ -d .build/web/typo3/sysext/backend ] || ln -sfn ../../../vendor/typo3/cms-backend .build/web/typo3/sysext/backend",
-            "[ -d .build/web/typo3/sysext/core ] || ln -sfn ../../../vendor/typo3/cms-core .build/web/typo3/sysext/core",
-            "[ -d .build/web/typo3/sysext/extbase ] || ln -sfn ../../../vendor/typo3/cms-extbase .build/web/typo3/sysext/extbase",
-            "[ -d .build/web/typo3/sysext/fluid ] || ln -sfn ../../../vendor/typo3/cms-fluid .build/web/typo3/sysext/fluid",
-            "[ -d .build/web/typo3/sysext/frontend ] || ln -sfn ../../../vendor/typo3/cms-frontend .build/web/typo3/sysext/frontend",
-            "[ -d .build/web/typo3/sysext/install ] || ln -sfn ../../../vendor/typo3/cms-install .build/web/typo3/sysext/install"
-        ],
-        "migration": [
-            "@migration:rector"
-        ],
-        "migration:rector": "rector process -c build/cgl/rector.php",
-        "test": [
-            "@test:unit",
-            "@test:functional"
-        ],
-        "test:unit": "phpunit -c build/tests/unit.xml",
-        "test:functional": "phpunit -c build/tests/functional.xml",
-        "test:coverage": [
-            "@test:coverage:merge",
-            "@test:coverage:coveralls"
-        ],
-        "test:coverage:merge": "phpcov merge --clover .build/log/coverage/clover.xml .build/log/coverage/clover",
-        "test:coverage:coveralls": "php-coveralls -x .build/log/coverage/clover.xml -o .build/log/coverage/coveralls.json -v"
-    }
+	"name": "undkonsorten/typo3-auto-login",
+	"description": "Automatically authenticates a TYPO3 CMS back end user for development",
+	"type": "library",
+	"require": {
+		"php": "~8.0.0 || ~8.1.0 || ~8.2.0",
+		"typo3/cms-core": "^11.0 || ^12.0"
+	},
+	"require-dev": {
+		"typo3/testing-framework": "^7.0@dev",
+		"typo3/minimal": "^11.0 || ^12.0",
+		"phpunit/phpcov": "^8.0",
+		"php-coveralls/php-coveralls": "^2.2",
+		"ssch/typo3-rector": "^1.1",
+		"typo3/coding-standards": "^0.7",
+		"armin/editorconfig-cli": "^1.5"
+	},
+	"license": "GPL-2.0-or-later",
+	"authors": [
+		{
+			"name": "Felix Althaus",
+			"email": "felix.althaus@undkonsorten.com"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"Undkonsorten\\TYPO3AutoLogin\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Undkonsorten\\TYPO3AutoLogin\\Tests\\": "tests/"
+		}
+	},
+	"extra": {
+		"typo3/cms": {
+			"web-dir": ".build/web"
+		}
+	},
+	"config": {
+		"vendor-dir": ".build/vendor",
+		"bin-dir": ".build/bin",
+		"allow-plugins": {
+			"typo3/class-alias-loader": true,
+			"typo3/cms-composer-installers": true
+		}
+	},
+	"scripts": {
+		"post-autoload-dump": [
+			"# The following lines can be removed once TF v7 is stable",
+			"mkdir -p .build/web/typo3/sysext",
+			"[ -d .build/web/typo3/sysext/backend ] || ln -sfn ../../../vendor/typo3/cms-backend .build/web/typo3/sysext/backend",
+			"[ -d .build/web/typo3/sysext/core ] || ln -sfn ../../../vendor/typo3/cms-core .build/web/typo3/sysext/core",
+			"[ -d .build/web/typo3/sysext/extbase ] || ln -sfn ../../../vendor/typo3/cms-extbase .build/web/typo3/sysext/extbase",
+			"[ -d .build/web/typo3/sysext/fluid ] || ln -sfn ../../../vendor/typo3/cms-fluid .build/web/typo3/sysext/fluid",
+			"[ -d .build/web/typo3/sysext/frontend ] || ln -sfn ../../../vendor/typo3/cms-frontend .build/web/typo3/sysext/frontend",
+			"[ -d .build/web/typo3/sysext/install ] || ln -sfn ../../../vendor/typo3/cms-install .build/web/typo3/sysext/install"
+		],
+		"lint": [
+			"@lint:editorconfig",
+			"@lint:php"
+		],
+		"lint:editorconfig": "ec --fix",
+		"lint:php": "php-cs-fixer fix --config build/cgl/.php-cs-fixer.php",
+		"migration": [
+			"@migration:rector"
+		],
+		"migration:rector": "rector process -c build/cgl/rector.php",
+		"test": [
+			"@test:unit",
+			"@test:functional"
+		],
+		"test:unit": "phpunit -c build/tests/unit.xml",
+		"test:functional": "phpunit -c build/tests/functional.xml",
+		"test:coverage": [
+			"@test:coverage:merge",
+			"@test:coverage:coveralls"
+		],
+		"test:coverage:merge": "phpcov merge --clover .build/log/coverage/clover.xml .build/log/coverage/clover",
+		"test:coverage:coveralls": "php-coveralls -x .build/log/coverage/clover.xml -o .build/log/coverage/coveralls.json -v"
+	}
 }
