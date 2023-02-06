@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Undkonsorten\TYPO3AutoLogin\Utility;
@@ -28,7 +29,6 @@ use Undkonsorten\TYPO3AutoLogin\Service\AutomaticAuthenticationService;
  */
 class RegisterServiceUtility
 {
-
     /**
      * Name of the cookie that disables autologin
      */
@@ -39,11 +39,6 @@ class RegisterServiceUtility
      */
     protected const DISABLE_AUTO_LOGIN_COOKIE_VALUE = 'disable';
 
-    protected static function getLogger(): Logger
-    {
-        return GeneralUtility::makeInstance(LogManager::class)->getLogger(__CLASS__);
-    }
-
     /**
      * @throws NotAllowedException
      */
@@ -52,7 +47,7 @@ class RegisterServiceUtility
         if (Environment::getContext()->isProduction()) {
             throw new NotAllowedException(sprintf('Automatic login is not allowed in Production context. Current context: "%s"', Environment::getContext()), 1534842728);
         }
-        if (false === getenv(AutomaticAuthenticationService::TYPO3_AUTOLOGIN_USERNAME_ENVVAR)) {
+        if (getenv(AutomaticAuthenticationService::TYPO3_AUTOLOGIN_USERNAME_ENVVAR) === false) {
             static::getLogger()->notice(sprintf(
                 '%s is enabled but no username given. Please set environment variable "%s".',
                 AutomaticAuthenticationService::class,
@@ -75,20 +70,26 @@ class RegisterServiceUtility
                     'className' => AutomaticAuthenticationService::class,
                 ]
             );
-            /** @noinspection UnsupportedStringOffsetOperationsInspection */
+
+            /* @phpstan-ignore-next-line */
             $GLOBALS['TYPO3_CONF_VARS']['SVCONF']['auth']['setup']['BE_alwaysFetchUser'] = true;
-            /** @noinspection UnsupportedStringOffsetOperationsInspection */
+            /* @phpstan-ignore-next-line */
             $GLOBALS['TYPO3_CONF_VARS']['SVCONF']['auth']['setup']['BE_alwaysAuthUser'] = true;
         }
     }
 
     /**
      * Checks whether the cookie to disable autologin is set
-     *
-     * @return bool
      */
     protected static function isDisableCookieSet(): bool
     {
-        return isset($GLOBALS['_COOKIE'][static::DISABLE_AUTO_LOGIN_COOKIE_NAME]) && $GLOBALS['_COOKIE'][static::DISABLE_AUTO_LOGIN_COOKIE_NAME] === static::DISABLE_AUTO_LOGIN_COOKIE_VALUE;
+        return is_array($GLOBALS['_COOKIE'] ?? null)
+            && isset($GLOBALS['_COOKIE'][static::DISABLE_AUTO_LOGIN_COOKIE_NAME])
+            && $GLOBALS['_COOKIE'][static::DISABLE_AUTO_LOGIN_COOKIE_NAME] === static::DISABLE_AUTO_LOGIN_COOKIE_VALUE;
+    }
+
+    protected static function getLogger(): Logger
+    {
+        return GeneralUtility::makeInstance(LogManager::class)->getLogger(self::class);
     }
 }

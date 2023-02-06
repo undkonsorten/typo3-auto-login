@@ -1,69 +1,97 @@
 {
-    "name": "undkonsorten/typo3-auto-login",
-    "description": "Automatically authenticates a TYPO3 CMS back end user for development",
-    "type": "library",
-    "require": {
-        "php": "^7.1 || ~8.0",
-        "typo3/cms-core": "~9.5 || ~10.4 || ~11.0 || ~12.0"
-    },
-    "require-dev": {
-        "typo3/testing-framework": "^4.0 || ^5.0 || ^6.0 || ^7.0@dev",
-        "typo3/minimal": "~9.5 || ~10.4 || ~11.0 || ~12.0",
-        "phpunit/phpcov": "^5.0 || ^6.0 || ^7.0 || ^8.0",
-        "php-coveralls/php-coveralls": "^2.2"
-    },
-    "license": "GPL-2.0-or-later",
-    "authors": [
-        {
-            "name": "Felix Althaus",
-            "email": "felix.althaus@undkonsorten.com"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "Undkonsorten\\TYPO3AutoLogin\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Undkonsorten\\TYPO3AutoLogin\\Tests\\": "tests/"
-        }
-    },
-    "extra": {
-        "typo3/cms": {
-            "web-dir": ".build/web"
-        }
-    },
-    "config": {
-        "vendor-dir": ".build/vendor",
-        "bin-dir": ".build/bin",
-        "allow-plugins": {
-            "typo3/class-alias-loader": true,
-            "typo3/cms-composer-installers": true
-        }
-    },
-    "scripts": {
-        "post-autoload-dump": [
-            "# The following lines can be removed once TF v7 is stable",
-            "mkdir -p .build/web/typo3/sysext",
-            "[ -d .build/web/typo3/sysext/backend ] || ln -sfn ../../../vendor/typo3/cms-backend .build/web/typo3/sysext/backend",
-            "[ -d .build/web/typo3/sysext/core ] || ln -sfn ../../../vendor/typo3/cms-core .build/web/typo3/sysext/core",
-            "[ -d .build/web/typo3/sysext/extbase ] || ln -sfn ../../../vendor/typo3/cms-extbase .build/web/typo3/sysext/extbase",
-            "[ -d .build/web/typo3/sysext/fluid ] || ln -sfn ../../../vendor/typo3/cms-fluid .build/web/typo3/sysext/fluid",
-            "[ -d .build/web/typo3/sysext/frontend ] || ln -sfn ../../../vendor/typo3/cms-frontend .build/web/typo3/sysext/frontend",
-            "[ -d .build/web/typo3/sysext/install ] || ln -sfn ../../../vendor/typo3/cms-install .build/web/typo3/sysext/install"
-        ],
-        "test": [
-            "@test:unit",
-            "@test:functional"
-        ],
-        "test:unit": "phpunit -c build/tests/unit.xml",
-        "test:functional": "phpunit -c build/tests/functional.xml",
-        "test:coverage": [
-            "@test:coverage:merge",
-            "@test:coverage:coveralls"
-        ],
-        "test:coverage:merge": "phpcov merge --clover .build/log/coverage/clover.xml .build/log/coverage/clover",
-        "test:coverage:coveralls": "php-coveralls -x .build/log/coverage/clover.xml -o .build/log/coverage/coveralls.json -v"
-    }
+	"name": "undkonsorten/typo3-auto-login",
+	"description": "Automatically authenticates a TYPO3 CMS back end user for development",
+	"license": "GPL-2.0-or-later",
+	"type": "library",
+	"authors": [
+		{
+			"name": "Felix Althaus",
+			"email": "felix.althaus@undkonsorten.com"
+		}
+	],
+	"require": {
+		"php": "~8.0.0 || ~8.1.0 || ~8.2.0",
+		"typo3/cms-core": "^11.5.4 || ^12.0"
+	},
+	"require-dev": {
+		"armin/editorconfig-cli": "^1.5",
+		"ergebnis/composer-normalize": "^2.29",
+		"php-coveralls/php-coveralls": "^2.2",
+		"phpstan/extension-installer": "^1.2",
+		"phpstan/phpstan": "^1.9",
+		"phpstan/phpstan-phpunit": "^1.3",
+		"phpstan/phpstan-strict-rules": "^1.4",
+		"phpunit/phpcov": "^8.0",
+		"saschaegerer/phpstan-typo3": "^1.8",
+		"ssch/typo3-rector": "^1.1",
+		"typo3/coding-standards": "^0.7",
+		"typo3/minimal": "^11.0 || ^12.0",
+		"typo3/testing-framework": "^7.0@dev"
+	},
+	"autoload": {
+		"psr-4": {
+			"Undkonsorten\\TYPO3AutoLogin\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Undkonsorten\\TYPO3AutoLogin\\Tests\\": "tests/"
+		}
+	},
+	"config": {
+		"allow-plugins": {
+			"ergebnis/composer-normalize": true,
+			"phpstan/extension-installer": true,
+			"typo3/class-alias-loader": true,
+			"typo3/cms-composer-installers": true
+		},
+		"bin-dir": ".build/bin",
+		"sort-packages": true,
+		"vendor-dir": ".build/vendor"
+	},
+	"extra": {
+		"typo3/cms": {
+			"web-dir": ".build/web"
+		}
+	},
+	"scripts": {
+		"post-autoload-dump": [
+			"# The following lines can be removed once TF v7 is stable",
+			"mkdir -p .build/web/typo3/sysext",
+			"[ -d .build/web/typo3/sysext/backend ] || ln -sfn ../../../vendor/typo3/cms-backend .build/web/typo3/sysext/backend",
+			"[ -d .build/web/typo3/sysext/core ] || ln -sfn ../../../vendor/typo3/cms-core .build/web/typo3/sysext/core",
+			"[ -d .build/web/typo3/sysext/extbase ] || ln -sfn ../../../vendor/typo3/cms-extbase .build/web/typo3/sysext/extbase",
+			"[ -d .build/web/typo3/sysext/fluid ] || ln -sfn ../../../vendor/typo3/cms-fluid .build/web/typo3/sysext/fluid",
+			"[ -d .build/web/typo3/sysext/frontend ] || ln -sfn ../../../vendor/typo3/cms-frontend .build/web/typo3/sysext/frontend",
+			"[ -d .build/web/typo3/sysext/install ] || ln -sfn ../../../vendor/typo3/cms-install .build/web/typo3/sysext/install"
+		],
+		"lint": [
+			"@lint:composer",
+			"@lint:editorconfig",
+			"@lint:php"
+		],
+		"lint:composer": "@composer normalize --no-check-lock --no-update-lock",
+		"lint:editorconfig": "ec --fix",
+		"lint:php": "php-cs-fixer fix --config build/cgl/.php-cs-fixer.php",
+		"migration": [
+			"@migration:rector"
+		],
+		"migration:rector": "rector process -c build/cgl/rector.php",
+		"sca": [
+			"@sca:php"
+		],
+		"sca:php": "phpstan analyse -c build/cgl/phpstan.neon",
+		"test": [
+			"@test:unit",
+			"@test:functional"
+		],
+		"test:coverage": [
+			"@test:coverage:merge",
+			"@test:coverage:coveralls"
+		],
+		"test:coverage:coveralls": "php-coveralls -x .build/log/coverage/clover.xml -o .build/log/coverage/coveralls.json -v",
+		"test:coverage:merge": "phpcov merge --clover .build/log/coverage/clover.xml .build/log/coverage/clover",
+		"test:functional": "phpunit -c build/tests/functional.xml",
+		"test:unit": "phpunit -c build/tests/unit.xml"
+	}
 }

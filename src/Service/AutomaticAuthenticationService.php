@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Undkonsorten\TYPO3AutoLogin\Service;
 
 use TYPO3\CMS\Core\Authentication\AbstractAuthenticationService;
-use TYPO3\CMS\Core\Information\Typo3Version;
 
 /**
  * This file is part of the composer package "undkonsorten/typo3-auto-login" for use with TYPO3 CMS.
@@ -22,38 +22,30 @@ use TYPO3\CMS\Core\Information\Typo3Version;
  */
 class AutomaticAuthenticationService extends AbstractAuthenticationService
 {
-
     /**
      * Name of the environment variable that defines the BE user name
      */
     public const TYPO3_AUTOLOGIN_USERNAME_ENVVAR = 'TYPO3_AUTOLOGIN_USERNAME';
 
-    public function getUser()
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function getUser(): array|false
     {
-        if ($this->isSwitchUserActive()) {
-            return null;
+        if ($this->isSwitchUserActive() || getenv(self::TYPO3_AUTOLOGIN_USERNAME_ENVVAR) === false) {
+            return false;
         }
+
         return $this->fetchUserRecord(getenv(self::TYPO3_AUTOLOGIN_USERNAME_ENVVAR));
     }
 
-    public function authUser(
-        /** @noinspection PhpUnusedParameterInspection */
-        array $user
-    ): int {
+    public function authUser(): int
+    {
         return 200;
     }
 
     private function isSwitchUserActive(): bool
     {
-        if ($this->usesNewSessionHandling()) {
-            return (bool)$this->pObj->getSession()->get('backuserid');
-        }
-
-        return (bool)($this->authInfo['userSession']['ses_backuserid'] ?? false);
-    }
-
-    private function usesNewSessionHandling(): bool
-    {
-        return (new Typo3Version())->getMajorVersion() >= 11;
+        return (bool)$this->pObj->getSession()->get('backuserid');
     }
 }

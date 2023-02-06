@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Undkonsorten\TYPO3AutoLogin\Tests\Functional\Service;
 
 /*
@@ -22,7 +24,6 @@ namespace Undkonsorten\TYPO3AutoLogin\Tests\Functional\Service;
  */
 
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use Undkonsorten\TYPO3AutoLogin\Service\AutomaticAuthenticationService;
 
@@ -34,15 +35,8 @@ use Undkonsorten\TYPO3AutoLogin\Service\AutomaticAuthenticationService;
  */
 class AutomaticAuthenticationServiceTest extends FunctionalTestCase
 {
-    /**
-     * @var AutomaticAuthenticationService
-     */
-    protected $subject;
-
-    /**
-     * @var BackendUserAuthentication
-     */
-    protected $backendUser;
+    protected AutomaticAuthenticationService $subject;
+    protected BackendUserAuthentication $backendUser;
 
     protected function setUp(): void
     {
@@ -51,12 +45,8 @@ class AutomaticAuthenticationServiceTest extends FunctionalTestCase
         // Provide environment variable for authentication process
         putenv(AutomaticAuthenticationService::TYPO3_AUTOLOGIN_USERNAME_ENVVAR . '=dummy');
 
-        // Import user record (TYPO3 < 11 provides an additional "disableIPlock" column)
-        if ($this->providesNewSessionHandling()) {
-            $this->importCSVDataSet(__DIR__ . '/../Fixtures/be_users.csv');
-        } else {
-            $this->importCSVDataSet(__DIR__ . '/../Fixtures/be_users_legacy.csv');
-        }
+        // Import user record
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/be_users.csv');
 
         // Build subject
         $this->subject = new AutomaticAuthenticationService();
@@ -70,6 +60,8 @@ class AutomaticAuthenticationServiceTest extends FunctionalTestCase
     public function getUserReturnsUserRecordAssociatedWithAutologinUsername(): void
     {
         $record = $this->subject->getUser();
+
+        self::assertIsArray($record);
         self::assertEquals(1, $record['uid']);
         self::assertEquals('dummy', $record['username']);
     }
@@ -77,15 +69,10 @@ class AutomaticAuthenticationServiceTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getUserReturnsNullIfSwitchUserIsActive(): void
+    public function getUserReturnsFalseIfSwitchUserIsActive(): void
     {
-        if ($this->providesNewSessionHandling()) {
-            $this->backendUser->getSession()->set('backuserid', 1);
-            self::assertNull($this->subject->getUser(), 'new session handling (TYPO3 >= 11)');
-        } else {
-            $this->subject->authInfo = ['userSession' => ['ses_backuserid' => 1]];
-            self::assertNull($this->subject->getUser(), 'old session handling (TYPO3 < 11)');
-        }
+        $this->backendUser->getSession()->set('backuserid', 1);
+        self::assertFalse($this->subject->getUser());
     }
 
     /**
@@ -93,12 +80,6 @@ class AutomaticAuthenticationServiceTest extends FunctionalTestCase
      */
     public function authUserReturnsCorrectAuthenticationState(): void
     {
-        $record = $this->subject->getUser();
-        self::assertEquals(200, $this->subject->authUser($record));
-    }
-
-    private function providesNewSessionHandling(): bool
-    {
-        return (new Typo3Version())->getMajorVersion() >= 11;
+        self::assertEquals(200, $this->subject->authUser());
     }
 }
