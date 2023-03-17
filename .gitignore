@@ -1,6 +1,7 @@
 /.build
-/var
 /build/log
+/config
+/var
 /composer.lock
 .phpunit.result.cache
 .php-cs-fixer.cache
