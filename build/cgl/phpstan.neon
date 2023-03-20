@@ -7,5 +7,3 @@ parameters:
 	paths:
 		- ../../src
 		- ../../tests
-	stubFiles:
-		- ../../tests/Stubs/AbstractAuthenticationService.stub
