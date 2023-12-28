@@ -1,8 +1,8 @@
 {
 	"name": "undkonsorten/typo3-auto-login",
-	"description": "Automatically authenticates a TYPO3 CMS back end user for development",
+	"description": "Automatically authenticates a TYPO3 CMS backend user for development.",
 	"license": "GPL-2.0-or-later",
-	"type": "library",
+	"type": "typo3-cms-extension",
 	"authors": [
 		{
 			"name": "Felix Althaus",
