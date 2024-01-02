@@ -26,7 +26,7 @@
 		"ssch/typo3-rector": "^1.1",
 		"typo3/coding-standards": "^0.7",
 		"typo3/minimal": "^11.0 || ^12.0",
-		"typo3/testing-framework": "^7.0@dev"
+		"typo3/testing-framework": "^7.0.2 || ^8.0"
 	},
 	"autoload": {
 		"psr-4": {
@@ -56,16 +56,6 @@
 		}
 	},
 	"scripts": {
-		"post-autoload-dump": [
-			"# The following lines can be removed once TF v7 is stable",
-			"mkdir -p .build/web/typo3/sysext",
-			"[ -d .build/web/typo3/sysext/backend ] || ln -sfn ../../../vendor/typo3/cms-backend .build/web/typo3/sysext/backend",
-			"[ -d .build/web/typo3/sysext/core ] || ln -sfn ../../../vendor/typo3/cms-core .build/web/typo3/sysext/core",
-			"[ -d .build/web/typo3/sysext/extbase ] || ln -sfn ../../../vendor/typo3/cms-extbase .build/web/typo3/sysext/extbase",
-			"[ -d .build/web/typo3/sysext/fluid ] || ln -sfn ../../../vendor/typo3/cms-fluid .build/web/typo3/sysext/fluid",
-			"[ -d .build/web/typo3/sysext/frontend ] || ln -sfn ../../../vendor/typo3/cms-frontend .build/web/typo3/sysext/frontend",
-			"[ -d .build/web/typo3/sysext/install ] || ln -sfn ../../../vendor/typo3/cms-install .build/web/typo3/sysext/install"
-		],
 		"lint": [
 			"@lint:composer",
 			"@lint:editorconfig",

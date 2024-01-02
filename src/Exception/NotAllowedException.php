@@ -17,6 +17,4 @@ namespace Undkonsorten\TYPO3AutoLogin\Exception;
  * Class NotAllowedException
  * @author Felix Althaus <felix.althaus@undkonsorten.com>
  */
-class NotAllowedException extends \Exception
-{
-}
+class NotAllowedException extends \Exception {}
