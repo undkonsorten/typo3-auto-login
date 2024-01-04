@@ -51,7 +51,7 @@
 	},
 	"extra": {
 		"typo3/cms": {
-			"extension-key": "auto_login",
+			"extension-key": "typo3_auto_login",
 			"web-dir": ".build/web"
 		}
 	},
