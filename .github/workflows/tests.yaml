@@ -27,7 +27,7 @@ jobs:
             typo3-version: "13.3"
     services:
       mysql:
-        image: mysql:5.7
+        image: mariadb:10.4
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: typo3
@@ -68,7 +68,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mysql:
-        image: mysql:8.0
+        image: mariadb:10.4
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: typo3
