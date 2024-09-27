@@ -56,13 +56,13 @@ jobs:
 
       # Run tests
       - name: Run tests
-        run: |
-          export typo3DatabaseName: ${{ env.DB_DATABASE }};
-          export typo3DatabaseHost: 127.0.0.1;
-          export typo3DatabasePort: ${{ job.services.mysql.ports[3306] }};
-          export typo3DatabaseUsername: ${{ env.DB_USER }};
-          export typo3DatabasePassword: ${{ env.DB_PASSWORD }};
-          composer test
+        run: composer test
+        env:
+          typo3DatabaseName: ${{ env.DB_DATABASE }}
+          typo3DatabaseHost: 127.0.0.1
+          typo3DatabasePort: ${{ job.services.mysql.ports[3306] }}
+          typo3DatabaseUsername: ${{ env.DB_USER }}
+          typo3DatabasePassword: ${{ env.DB_PASSWORD }}
 
   coverage:
     name: Test coverage
@@ -96,13 +96,13 @@ jobs:
 
       # Run tests
       - name: Run tests
-        run: |
-          export typo3DatabaseName: ${{ env.DB_DATABASE }};
-          export typo3DatabaseHost: 127.0.0.1;
-          export typo3DatabasePort: ${{ job.services.mysql.ports[3306] }};
-          export typo3DatabaseUsername: ${{ env.DB_USER }};
-          export typo3DatabasePassword: ${{ env.DB_PASSWORD }};
-          composer test -- --coverage-text
+        run: composer test -- --coverage-text
+        env:
+          typo3DatabaseName: ${{ env.DB_DATABASE }}
+          typo3DatabaseHost: 127.0.0.1
+          typo3DatabasePort: ${{ job.services.mysql.ports[3306] }}
+          typo3DatabaseUsername: ${{ env.DB_USER }}
+          typo3DatabasePassword: ${{ env.DB_PASSWORD }}
 
       # Build coverage report
       - name: Generate coverage report
