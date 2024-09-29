@@ -56,7 +56,7 @@ jobs:
 
       # Run tests
       - name: Run tests
-        run: composer test
+        run: composer test -- --no-coverage
         env:
           typo3DatabaseName: typo3
           typo3DatabaseHost: 127.0.0.1
