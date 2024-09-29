@@ -1,6 +1,5 @@
 /.build
 /build/log
-/build/logs
 /config
 /var
 /composer.lock

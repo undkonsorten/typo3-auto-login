@@ -25,10 +25,14 @@ jobs:
             typo3-version: "13.3"
           - php-version: "8.1"
             typo3-version: "13.3"
-    env:
-      DB_DATABASE: typo3
-      DB_USER: root
-      DB_PASSWORD: root
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: typo3
+        ports:
+          - 3306
 
     steps:
       - uses: actions/checkout@v4
@@ -41,11 +45,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           tools: composer:v2
-          coverage: xdebug
-      - name: Set up MySQL
-        run: |
-          sudo /etc/init.d/mysql start
-          mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
+          coverage: none
 
       # Install Composer dependencies
       - name: Install Composer dependencies
@@ -58,19 +58,23 @@ jobs:
       - name: Run tests
         run: composer test
         env:
-          typo3DatabaseName: ${{ env.DB_DATABASE }}
+          typo3DatabaseName: typo3
           typo3DatabaseHost: 127.0.0.1
           typo3DatabasePort: ${{ job.services.mysql.ports[3306] }}
-          typo3DatabaseUsername: ${{ env.DB_USER }}
-          typo3DatabasePassword: ${{ env.DB_PASSWORD }}
+          typo3DatabaseUsername: root
+          typo3DatabasePassword: root
 
   coverage:
     name: Test coverage
     runs-on: ubuntu-latest
-    env:
-      DB_DATABASE: typo3
-      DB_USER: root
-      DB_PASSWORD: root
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: typo3
+        ports:
+          - 3306
 
     steps:
       - uses: actions/checkout@v4
@@ -85,11 +89,6 @@ jobs:
           tools: composer:v2
           coverage: pcov
 
-      - name: Set up MySQL
-        run: |
-          sudo /etc/init.d/mysql start
-          mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
-
       # Install Composer dependencies
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v2
@@ -98,11 +97,11 @@ jobs:
       - name: Run tests
         run: composer test -- --coverage-text
         env:
-          typo3DatabaseName: ${{ env.DB_DATABASE }}
+          typo3DatabaseName: typo3
           typo3DatabaseHost: 127.0.0.1
           typo3DatabasePort: ${{ job.services.mysql.ports[3306] }}
-          typo3DatabaseUsername: ${{ env.DB_USER }}
-          typo3DatabasePassword: ${{ env.DB_PASSWORD }}
+          typo3DatabaseUsername: root
+          typo3DatabasePassword: root
 
       # Build coverage report
       - name: Generate coverage report
