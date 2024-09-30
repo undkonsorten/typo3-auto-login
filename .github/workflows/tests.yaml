@@ -56,7 +56,7 @@ jobs:
 
       # Run tests
       - name: Run tests
-        run: composer test -- --no-coverage
+        run: composer test
         env:
           typo3DatabaseName: typo3
           typo3DatabaseHost: 127.0.0.1
@@ -86,7 +86,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.3
-          tools: composer:v2
+          tools: composer:v2, php-coveralls/php-coveralls
           coverage: pcov
 
       # Install Composer dependencies
@@ -95,7 +95,7 @@ jobs:
 
       # Run tests
       - name: Run tests
-        run: composer test -- --coverage-text
+        run: composer test:coverage
         env:
           typo3DatabaseName: typo3
           typo3DatabaseHost: 127.0.0.1
@@ -105,6 +105,6 @@ jobs:
 
       # Build coverage report
       - name: Generate coverage report
-        run: composer test:coverage
+        run: .build/vendor/bin/php-coveralls -x .build/log/coverage/clover.xml -o .build/log/coverage/coveralls.json -v
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
