@@ -17,6 +17,7 @@
         <report>
             <html outputDirectory="../../.build/log/coverage/html/unit"/>
             <php outputFile="../../.build/log/coverage/clover/unit.cov"/>
+            <text outputFile="php://stdout"/>
         </report>
     </coverage>
 </phpunit>
