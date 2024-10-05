@@ -95,6 +95,6 @@ jobs:
 
       # Build coverage report
       - name: Generate coverage report
-        run: .build/vendor/bin/php-coveralls -x .build/log/coverage/clover.xml -o .build/log/coverage/coveralls.json -v
+        run: php-coveralls -x .build/log/coverage/clover.xml -o .build/log/coverage/coveralls.json -v
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
