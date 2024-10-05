@@ -16,19 +16,21 @@ jobs:
       fail-fast: false
       matrix:
         php-version: ["8.0", "8.1", "8.2", "8.3"]
-        typo3-version: ["11.5", "12.3"]
+        typo3-version: ["11.5", "12.4", "13.3"]
         dependencies: ["highest", "lowest"]
         exclude:
           - php-version: "8.0"
-            typo3-version: "12.3"
-    services:
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: typo3
-        ports:
-          - 3306
+            typo3-version: "12.4"
+          - php-version: "8.0"
+            typo3-version: "13.3"
+          - php-version: "8.1"
+            typo3-version: "13.3"
+    env:
+      typo3DatabaseName: typo3
+      typo3DatabaseHost: '127.0.0.1'
+      typo3DatabaseUsername: root
+      typo3DatabasePassword: root
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -42,6 +44,10 @@ jobs:
           tools: composer:v2
           coverage: none
 
+      # Start MySQL service
+      - name: Start MySQL
+        run: sudo /etc/init.d/mysql start
+
       # Install Composer dependencies
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v2
@@ -52,24 +58,16 @@ jobs:
       # Run tests
       - name: Run tests
         run: composer test
-        env:
-          typo3DatabaseName: typo3
-          typo3DatabaseHost: 127.0.0.1
-          typo3DatabasePort: ${{ job.services.mysql.ports[3306] }}
-          typo3DatabaseUsername: root
-          typo3DatabasePassword: root
 
   coverage:
     name: Test coverage
     runs-on: ubuntu-latest
-    services:
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: typo3
-        ports:
-          - 3306
+    env:
+      typo3DatabaseName: typo3
+      typo3DatabaseHost: '127.0.0.1'
+      typo3DatabaseUsername: root
+      typo3DatabasePassword: root
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -80,8 +78,12 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.3
-          tools: composer:v2
+          tools: composer:v2, php-coveralls/php-coveralls
           coverage: pcov
+
+      # Start MySQL service
+      - name: Start MySQL
+        run: sudo /etc/init.d/mysql start
 
       # Install Composer dependencies
       - name: Install Composer dependencies
@@ -89,16 +91,10 @@ jobs:
 
       # Run tests
       - name: Run tests
-        run: composer test -- --coverage-text
-        env:
-          typo3DatabaseName: typo3
-          typo3DatabaseHost: 127.0.0.1
-          typo3DatabasePort: ${{ job.services.mysql.ports[3306] }}
-          typo3DatabaseUsername: root
-          typo3DatabasePassword: root
+        run: composer test:coverage
 
       # Build coverage report
       - name: Generate coverage report
-        run: composer test:coverage
+        run: php-coveralls -x .build/log/coverage/clover.xml -o .build/log/coverage/coveralls.json -v
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
