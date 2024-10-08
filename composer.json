@@ -49,6 +49,9 @@
 		"vendor-dir": ".build/vendor"
 	},
 	"extra": {
+		"branch-alias": {
+			"dev-main": "2.1.x-dev"
+		},
 		"typo3/cms": {
 			"extension-key": "typo3_auto_login",
 			"web-dir": ".build/web"
