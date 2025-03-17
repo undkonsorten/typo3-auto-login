@@ -156,7 +156,7 @@ class RegisterServiceUtilityTest extends UnitTestCase
         self::assertTrue($GLOBALS['TYPO3_CONF_VARS']['SVCONF']['auth']['setup']['BE_alwaysAuthUser']);
     }
 
-    protected function simulateEnvironment(string $applicationContext = null, bool $isCli = null): void
+    protected function simulateEnvironment(?string $applicationContext = null, ?bool $isCli = null): void
     {
         /** @noinspection PhpUnhandledExceptionInspection */
         Environment::initialize(
