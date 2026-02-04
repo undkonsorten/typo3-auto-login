@@ -1,4 +1,5 @@
 /.build
+/build/cgl/vendor
 /build/log
 /config
 /var

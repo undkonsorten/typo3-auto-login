@@ -23,6 +23,8 @@ namespace Undkonsorten\TYPO3AutoLogin\Tests\Functional\Service;
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use Undkonsorten\TYPO3AutoLogin\Service\AutomaticAuthenticationService;
@@ -33,10 +35,11 @@ use Undkonsorten\TYPO3AutoLogin\Service\AutomaticAuthenticationService;
  * @author Elias Häußler <e.haeussler@familie-redlich.de>
  * @license GPL-2.0-or-later
  */
-class AutomaticAuthenticationServiceTest extends FunctionalTestCase
+#[CoversClass(AutomaticAuthenticationService::class)]
+final class AutomaticAuthenticationServiceTest extends FunctionalTestCase
 {
-    protected AutomaticAuthenticationService $subject;
-    protected BackendUserAuthentication $backendUser;
+    private AutomaticAuthenticationService $subject;
+    private BackendUserAuthentication $backendUser;
 
     protected function setUp(): void
     {
@@ -54,9 +57,7 @@ class AutomaticAuthenticationServiceTest extends FunctionalTestCase
         $this->subject->db_user = ['table' => 'be_users', 'username_column' => 'username', 'check_pid_clause' => '', 'enable_clause' => ''];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getUserReturnsUserRecordAssociatedWithAutologinUsername(): void
     {
         $record = $this->subject->getUser();
@@ -66,18 +67,14 @@ class AutomaticAuthenticationServiceTest extends FunctionalTestCase
         self::assertEquals('dummy', $record['username']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getUserReturnsFalseIfSwitchUserIsActive(): void
     {
         $this->backendUser->getSession()->set('backuserid', 1);
         self::assertFalse($this->subject->getUser());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getUserReturnsFalseIfConfiguredUserDoesNotExist(): void
     {
         // Configure invalid user for automatic login
@@ -89,9 +86,7 @@ class AutomaticAuthenticationServiceTest extends FunctionalTestCase
         self::assertFalse($this->subject->getUser());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getUserBypassesMFA(): void
     {
         self::assertNotTrue($this->backendUser->getSession()->get('mfa'));
@@ -103,11 +98,9 @@ class AutomaticAuthenticationServiceTest extends FunctionalTestCase
         self::assertTrue($this->backendUser->getSession()->get('mfa'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function authUserReturnsCorrectAuthenticationState(): void
     {
-        self::assertEquals(200, $this->subject->authUser());
+        self::assertSame(200, $this->subject->authUser());
     }
 }

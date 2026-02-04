@@ -23,11 +23,10 @@ namespace Undkonsorten\TYPO3AutoLogin\Tests\Unit\Utility;
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use PHPUnit\Framework\Constraint\IsType;
-use PHPUnit\Framework\MockObject\Stub\ReturnCallback;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Core\ApplicationContext;
 use TYPO3\CMS\Core\Core\Environment;
-use TYPO3\CMS\Core\Exception;
 use TYPO3\CMS\Core\Log\Logger;
 use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -43,7 +42,8 @@ use Undkonsorten\TYPO3AutoLogin\Utility\RegisterServiceUtility;
  * @author Elias Häußler <e.haeussler@familie-redlich.de>
  * @license GPL-2.0-or-later
  */
-class RegisterServiceUtilityTest extends UnitTestCase
+#[CoversClass(RegisterServiceUtility::class)]
+final class RegisterServiceUtilityTest extends UnitTestCase
 {
     protected bool $backupEnvironment = true;
     protected bool $resetSingletonInstances = true;
@@ -56,10 +56,7 @@ class RegisterServiceUtilityTest extends UnitTestCase
         putenv(AutomaticAuthenticationService::TYPO3_AUTOLOGIN_USERNAME_ENVVAR . '=dummy');
     }
 
-    /**
-     * @test
-     * @throws NotAllowedException
-     */
+    #[Test]
     public function registerAutomaticAuthenticationServiceThrowsExceptionIfEnvironmentIsInProductionContext(): void
     {
         // Simulate Production environment
@@ -70,14 +67,9 @@ class RegisterServiceUtilityTest extends UnitTestCase
         RegisterServiceUtility::registerAutomaticAuthenticationService();
     }
 
-    /**
-     * @test
-     * @throws NotAllowedException
-     */
+    #[Test]
     public function registerAutomaticAuthenticationServiceLogsNoticeAndExitsIfEnvironmentVariableIsNotSet(): void
     {
-        $loggerIsCalled = false;
-
         $this->simulateEnvironment('Development/Simulation', false);
 
         // Unset environment variable first
@@ -91,24 +83,15 @@ class RegisterServiceUtilityTest extends UnitTestCase
             ->willReturn($loggerMock)
         ;
 
+        /* @phpstan-ignore staticMethod.internal */
         GeneralUtility::setSingletonInstance(LogManager::class, $logManagerMock);
 
-        $loggerMock->method('notice')
-            ->with(new IsType('string'))
-            ->will(new ReturnCallback(function () use (&$loggerIsCalled) {
-                $loggerIsCalled = true;
-            }))
-        ;
+        $loggerMock->expects(self::once())->method('notice');
 
         RegisterServiceUtility::registerAutomaticAuthenticationService();
-
-        self::assertTrue($loggerIsCalled);
     }
 
-    /**
-     * @test
-     * @throws NotAllowedException
-     */
+    #[Test]
     public function registerAutomaticAuthenticationServiceExitsIfRequestIsInCliMode(): void
     {
         $this->simulateEnvironment('Development/Simulation', true);
@@ -119,10 +102,7 @@ class RegisterServiceUtilityTest extends UnitTestCase
         self::assertArrayNotHasKey('auth', $GLOBALS['T3_SERVICES']);
     }
 
-    /**
-     * @test
-     * @throws NotAllowedException
-     */
+    #[Test]
     public function registerAutomaticAuthenticationServiceExitsIfDisableCookieIsSet(): void
     {
         $this->simulateEnvironment('Development/Simulation', false);
@@ -134,11 +114,7 @@ class RegisterServiceUtilityTest extends UnitTestCase
         self::assertArrayNotHasKey('auth', $GLOBALS['T3_SERVICES']);
     }
 
-    /**
-     * @test
-     * @throws NotAllowedException
-     * @throws Exception
-     */
+    #[Test]
     public function registerAutomaticAuthenticationServiceRegistersServiceCorrectly(): void
     {
         // Ensure requirements are met
@@ -156,9 +132,9 @@ class RegisterServiceUtilityTest extends UnitTestCase
         self::assertTrue($GLOBALS['TYPO3_CONF_VARS']['SVCONF']['auth']['setup']['BE_alwaysAuthUser']);
     }
 
-    protected function simulateEnvironment(?string $applicationContext = null, ?bool $isCli = null): void
+    private function simulateEnvironment(?string $applicationContext = null, ?bool $isCli = null): void
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
+        /* @phpstan-ignore staticMethod.internal */
         Environment::initialize(
             $applicationContext !== null ? new ApplicationContext($applicationContext) : Environment::getContext(),
             $isCli ?? Environment::isCli(),
@@ -172,7 +148,7 @@ class RegisterServiceUtilityTest extends UnitTestCase
         );
     }
 
-    protected function setAutoLoginCookie(string|null $value): void
+    private function setAutoLoginCookie(string|null $value): void
     {
         self::assertIsArray($GLOBALS['_COOKIE'] ?? null);
 

@@ -12,45 +12,41 @@ jobs:
   cgl:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v6
 
       # Prepare environment
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.3
-          tools: composer:v2, composer-require-checker, composer-unused
+          # We use the minimum supported PHP version
+          php-version: 8.2
+          tools: composer:v2, cs2pr
           coverage: none
 
       # Validation
       - name: Validate composer.json
-        run: composer validate --no-check-lock
+        run: composer validate --strict
 
       # Install dependencies
       - name: Install Composer dependencies
-        run: composer update --no-progress --no-plugins --no-scripts
+        uses: ramsey/composer-install@v3
 
-      # Check Composer dependencies
-      - name: Check dependencies
-        run: composer-require-checker check
-      - run: composer install --no-progress
-      - name: Check for unused dependencies
-        run: composer-unused
+      # Analyze
+      - name: Analyze dependencies
+        run: composer cgl analyze:dependencies
 
       # Linting
       - name: Lint composer.json
-        run: composer lint:composer -- --dry-run
-      - name: Lint .editorconfig
-        run: .build/bin/ec
+        run: composer cgl lint:composer
+      - name: Lint Editorconfig
+        run: composer cgl lint:editorconfig
       - name: Lint PHP
-        run: composer lint:php -- --dry-run
+        run: composer cgl lint:php -- --format=checkstyle | cs2pr
 
       # SCA
       - name: SCA PHP
-        run: composer sca:php -- --error-format github
+        run: composer cgl sca:php -- --error-format github
 
       # Migration
-      - name: Run Rector migration
-        run: composer migration:rector -- --dry-run
+      - name: Rector migration
+        run: composer cgl migration:rector -- --dry-run

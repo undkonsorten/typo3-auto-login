@@ -1,7 +1,9 @@
 includes:
-	- ../../.build/vendor/phpstan/phpstan/conf/bleedingEdge.neon
+	- vendor/phpstan/phpstan/conf/bleedingEdge.neon
 parameters:
 	level: max
 	paths:
 		- ../../src
 		- ../../tests
+	bootstrapFiles:
+		- ../../.build/vendor/autoload.php

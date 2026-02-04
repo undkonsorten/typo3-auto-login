@@ -32,12 +32,12 @@ class RegisterServiceUtility
     /**
      * Name of the cookie that disables autologin
      */
-    protected const DISABLE_AUTO_LOGIN_COOKIE_NAME = '_typo3-auto-login';
+    final protected const DISABLE_AUTO_LOGIN_COOKIE_NAME = '_typo3-auto-login';
 
     /**
      * Value of the cookie that disables autologin
      */
-    protected const DISABLE_AUTO_LOGIN_COOKIE_VALUE = 'disable';
+    final protected const DISABLE_AUTO_LOGIN_COOKIE_VALUE = 'disable';
 
     /**
      * @throws NotAllowedException
