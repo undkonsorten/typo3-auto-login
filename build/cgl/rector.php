@@ -8,8 +8,8 @@ use Ssch\TYPO3Rector\Set\Typo3SetList;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->paths([
-        getcwd() . '/src',
-        getcwd() . '/tests',
+        dirname(__DIR__, 2) . '/src',
+        dirname(__DIR__, 2) . '/tests',
     ]);
 
     $rectorConfig->sets([
