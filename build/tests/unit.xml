@@ -10,14 +10,16 @@
             <directory>../../tests/Unit</directory>
         </testsuite>
     </testsuites>
-    <coverage processUncoveredFiles="true">
-        <include>
-            <directory suffix=".php">../../src</directory>
-        </include>
+    <coverage>
         <report>
             <html outputDirectory="../../.build/log/coverage/html/unit"/>
             <php outputFile="../../.build/log/coverage/clover/unit.cov"/>
             <text outputFile="php://stdout"/>
         </report>
     </coverage>
+    <source>
+        <include>
+            <directory>../../src</directory>
+        </include>
+    </source>
 </phpunit>

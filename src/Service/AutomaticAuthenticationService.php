@@ -32,11 +32,13 @@ class AutomaticAuthenticationService extends AbstractAuthenticationService
      */
     public function getUser(): array|false
     {
-        if ($this->isSwitchUserActive() || getenv(self::TYPO3_AUTOLOGIN_USERNAME_ENVVAR) === false) {
+        $username = getenv(self::TYPO3_AUTOLOGIN_USERNAME_ENVVAR);
+
+        if ($username === false || $this->isSwitchUserActive()) {
             return false;
         }
 
-        $user = $this->fetchUserRecord(getenv(self::TYPO3_AUTOLOGIN_USERNAME_ENVVAR));
+        $user = $this->fetchUserRecord($username);
 
         // Early return if user record is invalid
         if (!is_array($user)) {
