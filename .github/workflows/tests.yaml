@@ -23,6 +23,18 @@ jobs:
             typo3-version: "12.4"
           - php-version: "8.5"
             typo3-version: "12.4"
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -proot"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
     env:
       typo3DatabaseName: typo3
       typo3DatabaseHost: '127.0.0.1'
@@ -42,10 +54,6 @@ jobs:
           tools: composer:v2
           coverage: none
 
-      # Start MySQL service
-      - name: Start MySQL
-        run: sudo /etc/init.d/mysql start
-
       # Install Composer dependencies
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v2
@@ -60,6 +68,18 @@ jobs:
   coverage:
     name: Test coverage
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -proot"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
     env:
       typo3DatabaseName: typo3
       typo3DatabaseHost: '127.0.0.1'
@@ -78,10 +98,6 @@ jobs:
           php-version: 8.5
           tools: composer:v2, php-coveralls/php-coveralls
           coverage: pcov
-
-      # Start MySQL service
-      - name: Start MySQL
-        run: sudo /etc/init.d/mysql start
 
       # Install Composer dependencies
       - name: Install Composer dependencies
