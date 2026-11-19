@@ -54,6 +54,14 @@ if (\TYPO3\CMS\Core\Core\Environment::getContext()->isDevelopment()) {
 
 Autologin will fail and throw an exception in `Production(/*)` contexts.
 
+### Multi-factor authentication
+
+The automatically authenticated user bypasses multi-factor authentication
+(MFA). This includes the MFA setup that is enforced by
+`$GLOBALS['TYPO3_CONF_VARS']['BE']['requireMfa']` or the user TSconfig option
+`auth.mfa.required`, so there is no need to disable these settings for
+development.
+
 ### Bookmarklet
 
 There are reasons to temporarily disable the automatic login. For this,
