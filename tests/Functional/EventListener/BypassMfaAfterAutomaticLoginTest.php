@@ -23,7 +23,6 @@ namespace Undkonsorten\TYPO3AutoLogin\Tests\Functional\EventListener;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
-use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Authentication\Event\AfterUserLoggedInEvent;
 use TYPO3\CMS\Core\Core\ApplicationContext;
@@ -133,7 +132,10 @@ final class BypassMfaAfterAutomaticLoginTest extends FunctionalTestCase
         self::assertArrayHasKey('auth', $GLOBALS['T3_SERVICES']);
     }
 
-    private function createBackendRequestWithoutSessionCookie(): ServerRequestInterface
+    /**
+     * @phpstan-ignore return.internalClass
+     */
+    private function createBackendRequestWithoutSessionCookie(): ServerRequest
     {
         /* @phpstan-ignore new.internalClass, method.internalClass */
         $request = new ServerRequest('https://example.com/typo3/', 'GET', null, [], [
