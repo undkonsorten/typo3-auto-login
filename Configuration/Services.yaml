@@ -1,0 +1,11 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Undkonsorten\TYPO3AutoLogin\EventListener\BypassMfaAfterAutomaticLogin:
+    tags:
+      - name: event.listener
+        identifier: 'typo3-auto-login/bypass-mfa'
+        event: TYPO3\CMS\Core\Authentication\Event\AfterUserLoggedInEvent

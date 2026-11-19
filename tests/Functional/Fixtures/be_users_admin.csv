@@ -1,0 +1,4 @@
+"be_users"
+,"uid","pid","username","admin","deleted","disable"
+,1,0,dummy,1,0,0
+,2,0,editor,1,0,0
